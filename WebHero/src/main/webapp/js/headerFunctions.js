@@ -1,7 +1,0 @@
-function createGame() {
-
-}
-
-function login() {
-
-}
