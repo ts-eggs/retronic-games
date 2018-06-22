@@ -13,7 +13,7 @@ public class ExtendedWebSecurityExpressionHandler extends DefaultWebSecurityExpr
 
     @Override
     protected SecurityExpressionRoot createSecurityExpressionRoot(Authentication authentication, FilterInvocation fi) {
-        ExtendedSecurityExpressionRoot root = new ExtendedSecurityExpressionRoot(authentication, fi);
+        ExtendedSecurityExpressionRoot root = new ExtendedSecurityExpressionRoot(authentication);
         root.setPermissionEvaluator(getPermissionEvaluator());
         root.setTrustResolver(trustResolver);
         root.setRoleHierarchy(getRoleHierarchy());
