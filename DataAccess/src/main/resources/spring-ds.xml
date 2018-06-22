@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+    <!--<bean class="com.retronic.hero.config.DatasourceConfig"/>-->
+
+    <bean id="dataSource" class="com.microsoft.sqlserver.jdbc.SQLServerDataSource">
+        <property name="serverName" value="jupiter.eggs.local" />
+        <property name="integratedSecurity" value="true" />
+        <property name="databaseName" value="ts_test"/>
+        <property name="user" value="eggs\ts"/>
+        <property name="password" value="xjhvcK693"/>
+    </bean>
+
+</beans>
