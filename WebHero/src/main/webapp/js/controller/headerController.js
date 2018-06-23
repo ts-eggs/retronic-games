@@ -1,5 +1,5 @@
 function createGame() {
-    top.Sjl.window.createWindow({
+    top.Sjl.createWindow({
         title: 'window title'
     });
 }

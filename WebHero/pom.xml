@@ -35,6 +35,10 @@
                                     <directory>${basedir}/../WebLib/src/main/js</directory>
                                     <targetPath>js/lib</targetPath>
                                 </resource>
+                                <resource>
+                                    <directory>${basedir}/../WebLib/src/main/resources</directory>
+                                    <targetPath>.</targetPath>
+                                </resource>
                             </webResources>
                         </configuration>
                     </plugin>

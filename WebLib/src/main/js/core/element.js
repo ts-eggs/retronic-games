@@ -1,21 +1,33 @@
-top.Sjl.element.elements = {};
+top.Sjl.core.element.elements = {};
 
-top.Sjl.element.init = function() {
+top.Sjl.core.element.init = function() {
     console.info('init element component');
+
+    // map public functions
+    top.Sjl.createElement = top.Sjl.core.element.createElement;
+    top.Sjl.removeElement = top.Sjl.core.element.removeElement;
+    top.Sjl.getElement = top.Sjl.core.element.getElement;
+    top.Sjl.showElement = top.Sjl.core.element.showElement;
+    top.Sjl.hideElement = top.Sjl.core.element.hideElement;
 };
 
-top.Sjl.element._getElementId = function() {
+top.Sjl.core.element._getElementId = function() {
+    var scope = top.Sjl.core.element;
     var id = 1;
 
-    for(var key in this.elements) {
-        id = id < parseInt(key) ? parseInt(key) : id;
+    for(var key in scope.elements) {
+        if(scope.elements.hasOwnProperty(key)) {
+            id = id < parseInt(key) ? parseInt(key) : id;
+        }
     }
 
     return id+1;
 };
 
-top.Sjl.element._hasElementId = function(id) {
-    for(var key in this.elements) {
+top.Sjl.core.element._hasElementId = function(id) {
+    var scope = top.Sjl.core.element;
+
+    for(var key in scope.elements) {
         if(id == key) {
             return true;
         }
@@ -24,29 +36,34 @@ top.Sjl.element._hasElementId = function(id) {
     return false;
 };
 
-top.Sjl.element._addElement = function(element) {
-    if(this.elements.hasOwnProperty(element.id)) {
+top.Sjl.core.element._addElement = function(element) {
+    var scope = top.Sjl.core.element;
+
+    if(scope.elements.hasOwnProperty(element.id)) {
         console.warn('element already exists in map: ' + element.id);
         return;
     }
 
-    this.elements[element.id] = element;
+    scope.elements[element.id] = element;
 };
 
-top.Sjl.element._removeElement = function(element) {
-    if(!this.elements.hasOwnProperty(element.id)) {
+top.Sjl.core.element._removeElement = function(element) {
+    var scope = top.Sjl.core.element;
+
+    if(!scope.elements.hasOwnProperty(element.id)) {
         console.warn('element not found in map for remove: '+element.id);
         return;
     }
 
-    delete this.elements[element.id];
+    delete scope.elements[element.id];
 };
 
-top.Sjl.element.createElement = function(config) {
+top.Sjl.core.element.createElement = function(config) {
+    var scope = top.Sjl.core.element;
     config = config || {};
-    config.id = config.id || this._getElementId();
+    config.id = config.id || scope._getElementId();
 
-    if(this._hasElementId(config.id)) {
+    if(scope._hasElementId(config.id)) {
         console.error('element id is already used: '+config.id);
         return;
     }
@@ -59,18 +76,27 @@ top.Sjl.element.createElement = function(config) {
     element.dom = document.createElement(config.type);
     element.dom.id = config.name + "-" + config.id;
     element.dom.className  = config.name;
+
+    if(config.style) {
+        if(config.style.width) {
+            element.dom.style.width = config.style.width + "px";
+        }
+        if(config.style.height) {
+            element.dom.style.height = config.style.height + "px";
+        }
+    }
     
     if(config.text) {
-        element.dom.htmlText = config.text;
+        element.dom.innerText = config.text;
     }
 
-    this._addElement(element);
+    scope._addElement(element);
 
     if(config.items && config.items.length > 0) {
         for(var i = 0; i < config.items.length; i++) {
             var childConfig = config.items[i];
             childConfig.parent = element;
-            this.createElement(childConfig);
+            scope.createElement(childConfig);
         }
     }
 
@@ -82,17 +108,20 @@ top.Sjl.element.createElement = function(config) {
     return element;
 };
 
-top.Sjl.element.getElement = function(id) {
-    if(!this.elements.hasOwnProperty(id)) {
+top.Sjl.core.element.getElement = function(id) {
+    var scope = top.Sjl.core.element;
+
+    if(!scope.elements.hasOwnProperty(id)) {
         console.warn('element not found in map for get: '+id);
         return null;
     }
 
-    return this.elements[id];
+    return scope.elements[id];
 };
 
-top.Sjl.element.removeElement = function(id) {
-    var element = this.getElement(id);
+top.Sjl.core.element.removeElement = function(id) {
+    var scope = top.Sjl.core.element;
+    var element = scope.getElement(id);
 
     if(element == null) {
         console.warn('element not found for remove: '+id);
@@ -103,29 +132,31 @@ top.Sjl.element.removeElement = function(id) {
         element.dom.parentNode.removeChild(element);
     }
 
-    this._removeElement(element);
+    scope._removeElement(element);
 };
 
-top.Sjl.element.showElementById = function(id) {
-    var element = this.getElement(id);
+top.Sjl.core.element.showElement = function(id) {
+    var scope = top.Sjl.core.element;
+    var element = scope.getElement(id);
 
     if(element == null) {
         console.warn('element not found to show: '+id);
         return;
     }
 
-    element.style.display = "block";
+    element.dom.style.display = "block";
 };
 
-top.Sjl.element.hideElementById = function(id) {
-    var element = this.getElement(id);
+top.Sjl.core.element.hideElement = function(id) {
+    var scope = top.Sjl.core.element;
+    var element = scope.getElement(id);
 
     if(element == null) {
         console.warn('element not found to hide: '+id);
         return;
     }
 
-    element.style.display = "none";
+    element.dom.style.display = "none";
 };
 
-top.Sjl.element.init();
+top.Sjl.core.element.init();
