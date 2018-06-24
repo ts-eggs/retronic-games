@@ -1,7 +1,7 @@
-top.Sjl.core.element.elements = {};
+top.Sjl.core.element._elements = {};
 
 top.Sjl.core.element.init = function() {
-    console.info('init element component');
+    console.info('init element core');
 
     // map public functions
     top.Sjl.createElement = top.Sjl.core.element.createElement;
@@ -11,12 +11,12 @@ top.Sjl.core.element.init = function() {
     top.Sjl.hideElement = top.Sjl.core.element.hideElement;
 };
 
-top.Sjl.core.element._getElementId = function() {
+top.Sjl.core.element._getNextElementId = function() {
     var scope = top.Sjl.core.element;
     var id = 1;
 
-    for(var key in scope.elements) {
-        if(scope.elements.hasOwnProperty(key)) {
+    for(var key in scope._elements) {
+        if(scope._elements.hasOwnProperty(key)) {
             id = id < parseInt(key) ? parseInt(key) : id;
         }
     }
@@ -27,7 +27,7 @@ top.Sjl.core.element._getElementId = function() {
 top.Sjl.core.element._hasElementId = function(id) {
     var scope = top.Sjl.core.element;
 
-    for(var key in scope.elements) {
+    for(var key in scope._elements) {
         if(id == key) {
             return true;
         }
@@ -39,41 +39,47 @@ top.Sjl.core.element._hasElementId = function(id) {
 top.Sjl.core.element._addElement = function(element) {
     var scope = top.Sjl.core.element;
 
-    if(scope.elements.hasOwnProperty(element.id)) {
+    if(scope._elements.hasOwnProperty(element.id)) {
         console.warn('element already exists in map: ' + element.id);
         return;
     }
 
-    scope.elements[element.id] = element;
+    scope._elements[element.id] = element;
 };
 
 top.Sjl.core.element._removeElement = function(element) {
     var scope = top.Sjl.core.element;
 
-    if(!scope.elements.hasOwnProperty(element.id)) {
+    if(!scope._elements.hasOwnProperty(element.id)) {
         console.warn('element not found in map for remove: '+element.id);
         return;
     }
 
-    delete scope.elements[element.id];
+    delete scope._elements[element.id];
 };
 
-top.Sjl.core.element.createElement = function(config) {
+top.Sjl.core.element._optimizeConfig = function (config)  {
     var scope = top.Sjl.core.element;
     config = config || {};
-    config.id = config.id || scope._getElementId();
+    config.id = config.id || scope._getNextElementId();
 
     if(scope._hasElementId(config.id)) {
         console.error('element id is already used: '+config.id);
         return;
     }
 
-    config.type = config.type || "div";
+    config.type = config.type || "element";
     config.name = config.name || "element";
     config.class = config.class || config.name;
+    config.domType = config.domType || "div";
+};
+
+top.Sjl.core.element.createElement = function(config) {
+    var scope = top.Sjl.core.element;
+    scope._optimizeConfig(config);
 
     var element = config;
-    element.dom = document.createElement(config.type);
+    element.dom = document.createElement(config.domType);
     element.dom.id = config.name + "-" + config.id;
     element.dom.className  = config.name;
 
@@ -95,14 +101,18 @@ top.Sjl.core.element.createElement = function(config) {
     if(config.items && config.items.length > 0) {
         for(var i = 0; i < config.items.length; i++) {
             var childConfig = config.items[i];
-            childConfig.parent = element;
+            childConfig.parent = element.id;
             scope.createElement(childConfig);
         }
     }
 
     if(config.parent) {
-        var parent = config.parent.hasOwnProperty("dom") ? config.parent.dom : config.parent;
-        parent.appendChild(element.dom);
+        var parentElementDom = scope._hasElementId(config.parent) ? scope.getElement(config.parent).dom : null;
+        var parentDom = config.parent === 'body' ? top.document.body : parentElementDom;
+
+        if(parentDom) {
+            parentDom.appendChild(element.dom);
+        }
     }
 
     return element;
@@ -111,12 +121,12 @@ top.Sjl.core.element.createElement = function(config) {
 top.Sjl.core.element.getElement = function(id) {
     var scope = top.Sjl.core.element;
 
-    if(!scope.elements.hasOwnProperty(id)) {
+    if(!scope._elements.hasOwnProperty(id)) {
         console.warn('element not found in map for get: '+id);
         return null;
     }
 
-    return scope.elements[id];
+    return scope._elements[id];
 };
 
 top.Sjl.core.element.removeElement = function(id) {

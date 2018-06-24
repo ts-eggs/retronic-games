@@ -1,15 +1,11 @@
 top.Sjl.component.window._windows = {};
-top.Sjl.component.window._windowConfigFns = {};
 
 top.Sjl.component.window.init = function() {
     console.info('init window component');
-    var scope = top.Sjl.component.window;
-
-    // map window config templates
-    scope._windowConfigFns['default'] = scope._defaultWindow;
 
     // map public functions
     top.Sjl.createWindow = top.Sjl.component.window.createWindow;
+    top.Sjl.getWindow = top.Sjl.component.window.getWindow;
     top.Sjl.removeWindow = top.Sjl.component.window.removeWindow;
     top.Sjl.centerWindow = top.Sjl.component.window.centerWindow;
 };
@@ -17,48 +13,38 @@ top.Sjl.component.window.init = function() {
 top.Sjl.component.window._getWindowConfig = function(config) {
     var scope = top.Sjl.component.window;
 
-    if(scope._windowConfigFns.hasOwnProperty(config.type)) {
-        return scope._windowConfigFns[type](config);
+    if(scope._templates.hasOwnProperty(config.templateName)) {
+        return scope._templates[config.templateName];
     }
 
-    return scope._windowConfigFns['default'](config);
+    return scope._templates['default'];
 };
 
-top.Sjl.component.window._defaultWindow = function(config) {
+top.Sjl.component.window._optimizeConfig = function (config)  {
+    config = config || {};
+    config.type = "window";
+    config.parent = config.parent || 'body';
     config.width = config.width || 400;
     config.height = config.height || 400;
-    config.closeImg = config.closeImg || 'images/base/close.png';
-
-    return {
-        name: 'window',
-        parent: config.parent,
-        style: {
-            width: config.width,
-            height: config.height
-        },
-        items: [{
-            name: 'window-header',
-            items: [{
-                name: 'window-header-title',
-                text: config.title
-            }, {
-                name: 'window-header-close'
-            }]
-        }, {
-            name: 'window-content'
-        }]
-    }
+    config.hidden = config.hidden || false;
+    config.templateName = config.templateName || 'default';
+    return config;
 };
 
 top.Sjl.component.window.createWindow = function(config) {
     var scope = top.Sjl.component.window;
-    config = config || {};
-    config.parent = config.parent || top.document.body;
-    var view = top.Sjl.createElement(scope._getWindowConfig(config));
-    scope._windows[view.id] = view;
-    scope.centerWindow(view);
-    top.Sjl.showElement(view.id);
-    console.info('created window: '+view.id);
+    config = scope._optimizeConfig(config);
+
+    var elementConfig = top.Sjl.generateElementConfig(scope._getWindowConfig(config), config);
+    var element = top.Sjl.createElement(elementConfig);
+    scope._windows[element.id] = element;
+    scope.centerWindow(element);
+
+    if(config.hidden != true) {
+        top.Sjl.showElement(element.id);
+    }
+
+    console.info('created window: '+element.id);
 };
 
 top.Sjl.component.window.getWindow = function(id) {
