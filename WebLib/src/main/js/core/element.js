@@ -56,6 +56,12 @@ top.Sjl.core.element._removeElement = function(element) {
     }
 
     delete scope._elements[element.id];
+
+    if(element.items && element.items.length > 0) {
+        for( var i = 0; i < element.items.length; i++ ) {
+            scope._removeElement(element.items[i]);
+        }
+    }
 };
 
 top.Sjl.core.element._optimizeConfig = function (config)  {
@@ -74,8 +80,59 @@ top.Sjl.core.element._optimizeConfig = function (config)  {
     config.domType = config.domType || "div";
 };
 
-top.Sjl.core.element.createElement = function(config) {
+top.Sjl.core.element._setStyling = function(config, element) {
+    if(config.style.width) {
+        element.dom.style.width = config.style.width + "px";
+    }
+    if(config.style.height) {
+        element.dom.style.height = config.style.height + "px";
+    }
+};
+
+top.Sjl.core.element._setChildren = function(config, element, scope) {
+    for(var i = 0; i < config.items.length; i++) {
+        var childConfig = config.items[i];
+        childConfig.parent = element.id;
+        childConfig.type = element.type;
+        childConfig.componentId = element.componentId;
+        scope.createElement(childConfig);
+    }
+};
+
+top.Sjl.core.element._addDomEvents = function(config, element, scope, componentScope) {
+    if(!scope) {
+        console.warn('could not add dom events, scope undefined for dom: '+element.dom.id);
+        return;
+    }
+
+    if(!componentScope) {
+        console.warn('could not add dom events, componentScope undefined for component: '+element.type);
+        return;
+    }
+
+    for( var key in config.events ) {
+        if(config.events.hasOwnProperty(key)) {
+            scope._addDomEvent(element, key, config.events[key], componentScope);
+        }
+    }
+};
+
+top.Sjl.core.element._addDomEvent = function(element, event, fnName, componentScope) {
+    if(!componentScope._eventFunctions.hasOwnProperty(fnName)) {
+        console.warn('no function defined for component scope: '+componentScope.toString()+' fn: '+fnName);
+        return;
+    }
+
+    if(event === 'click') {
+        element.dom.onclick = function(e) {
+            componentScope._eventFunctions[fnName](element, e);
+        }
+    }
+};
+
+top.Sjl.core.element.createElement = function(config, isComponent) {
     var scope = top.Sjl.core.element;
+    var componentScope = top.Sjl.component[config.type];
     scope._optimizeConfig(config);
 
     var element = config;
@@ -83,13 +140,12 @@ top.Sjl.core.element.createElement = function(config) {
     element.dom.id = config.name + "-" + config.id;
     element.dom.className  = config.name;
 
+    if(isComponent === true) {
+        element.componentId = element.id;
+    }
+
     if(config.style) {
-        if(config.style.width) {
-            element.dom.style.width = config.style.width + "px";
-        }
-        if(config.style.height) {
-            element.dom.style.height = config.style.height + "px";
-        }
+       scope._setStyling(config, element);
     }
     
     if(config.text) {
@@ -99,11 +155,7 @@ top.Sjl.core.element.createElement = function(config) {
     scope._addElement(element);
 
     if(config.items && config.items.length > 0) {
-        for(var i = 0; i < config.items.length; i++) {
-            var childConfig = config.items[i];
-            childConfig.parent = element.id;
-            scope.createElement(childConfig);
-        }
+        scope._setChildren(config, element, scope);
     }
 
     if(config.parent) {
@@ -113,6 +165,10 @@ top.Sjl.core.element.createElement = function(config) {
         if(parentDom) {
             parentDom.appendChild(element.dom);
         }
+    }
+
+    if(config.events) {
+        scope._addDomEvents(config, element, scope, componentScope);
     }
 
     return element;
@@ -139,7 +195,7 @@ top.Sjl.core.element.removeElement = function(id) {
     }
 
     if(element.dom.parentNode) {
-        element.dom.parentNode.removeChild(element);
+        element.dom.parentNode.removeChild(element.dom);
     }
 
     scope._removeElement(element);

@@ -16,7 +16,17 @@ top.Sjl.core.template.generateElementConfig = function(templateConfig, config) {
         }
     }
 
-    return JSON.parse(templateString);
+    templateConfig = JSON.parse(templateString);
+    scope._applyConfig(templateConfig, config);
+    return templateConfig;
+};
+
+top.Sjl.core.template._applyConfig = function(templateConfig, config) {
+    for( var key in config ) {
+        if(config.hasOwnProperty(key) && !templateConfig.hasOwnProperty(key)) {
+            templateConfig[key] = config[key];
+        }
+    }
 };
 
 top.Sjl.core.template._getParameters = function(templateString) {

@@ -74,6 +74,7 @@ top.Sjl._loadComponent = function(packageName, scriptName) {
 
     top.Sjl._createScript("js/lib/" + packageName + "/" + scriptName + "/template.js");
     top.Sjl._createScript("js/lib/" + packageName + "/" + scriptName + "/controller.js");
+    top.Sjl._createScript("js/lib/" + packageName + "/" + scriptName + "/events.js");
 };
 
 top.Sjl._createScript = function(scriptPath) {

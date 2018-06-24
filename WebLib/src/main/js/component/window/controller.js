@@ -28,15 +28,14 @@ top.Sjl.component.window._optimizeConfig = function (config)  {
     config.height = config.height || 400;
     config.hidden = config.hidden || false;
     config.templateName = config.templateName || 'default';
-    return config;
 };
 
 top.Sjl.component.window.createWindow = function(config) {
     var scope = top.Sjl.component.window;
-    config = scope._optimizeConfig(config);
+    scope._optimizeConfig(config);
 
     var elementConfig = top.Sjl.generateElementConfig(scope._getWindowConfig(config), config);
-    var element = top.Sjl.createElement(elementConfig);
+    var element = top.Sjl.createElement(elementConfig, true);
     scope._windows[element.id] = element;
     scope.centerWindow(element);
 
