@@ -45,5 +45,33 @@
                 </plugins>
             </build>
         </profile>
+
+        <profile>
+            <id>prod</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <webResources>
+                                <resource>
+                                    <directory>${basedir}/../WebLib/build</directory>
+                                    <targetPath>js/lib</targetPath>
+                                    <includes>
+                                        <include>bootstrap.js</include>
+                                        <include>sjl.js</include>
+                                        <include>sjl-debug.js</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/../WebLib/src/main/resources</directory>
+                                    <targetPath>.</targetPath>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>

@@ -52,10 +52,6 @@ Sjl._loadPackage = function(packageName, scope) {
         if(scope[packageName].hasOwnProperty(scriptName)) {
             if(packageName === "style") {
                 scope._loadStyle(packageName, scriptName, scope);
-            } else if (packageName === 'component') {
-                scope._loadComponent(packageName, scriptName, scope);
-            } else {
-                scope._loadScript(packageName, scriptName, scope);
             }
         }
     }
@@ -68,34 +64,6 @@ Sjl._loadStyle = function(packageName, styleName, scope) {
     }
 
     Sjl._createLink("css/sjl/" + styleName + ".css");
-};
-
-Sjl._loadScript = function(packageName, scriptName, scope) {
-    if(!scope[packageName].hasOwnProperty(scriptName)) {
-        console.warn("script not found: "+scriptName);
-        return;
-    }
-
-    Sjl._createScript("js/lib/" + packageName + "/" + scriptName + ".js");
-};
-
-Sjl._loadComponent = function(packageName, scriptName, scope) {
-    if(!scope[packageName].hasOwnProperty(scriptName)) {
-        console.warn("component not found: "+scriptName);
-        return;
-    }
-
-    Sjl._createScript("js/lib/" + packageName + "/" + scriptName + "/template.js");
-    Sjl._createScript("js/lib/" + packageName + "/" + scriptName + "/controller.js");
-    Sjl._createScript("js/lib/" + packageName + "/" + scriptName + "/events.js");
-};
-
-Sjl._createScript = function(scriptPath) {
-    console.info("load script: "+scriptPath);
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = scriptPath;
-    document.head.appendChild(script);
 };
 
 Sjl._createLink = function(stylePath) {
