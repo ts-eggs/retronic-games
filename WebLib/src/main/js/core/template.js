@@ -1,12 +1,12 @@
-top.Sjl.core.template.init = function() {
+Sjl.core.template.init = function() {
     console.info('init template core');
 
     // map public functions
-    top.Sjl.generateElementConfig = top.Sjl.core.template.generateElementConfig;
+    Sjl.generateElementConfig = Sjl.core.template.generateElementConfig;
 };
 
-top.Sjl.core.template.generateElementConfig = function(templateConfig, config) {
-    var scope = top.Sjl.core.template;
+Sjl.core.template.generateElementConfig = function(templateConfig, config) {
+    var scope = Sjl.core.template;
     var templateString = JSON.stringify(templateConfig);
     var parameters = scope._getParameters(templateString);
 
@@ -21,7 +21,7 @@ top.Sjl.core.template.generateElementConfig = function(templateConfig, config) {
     return templateConfig;
 };
 
-top.Sjl.core.template._applyConfig = function(templateConfig, config) {
+Sjl.core.template._applyConfig = function(templateConfig, config) {
     for( var key in config ) {
         if(config.hasOwnProperty(key) && !templateConfig.hasOwnProperty(key)) {
             templateConfig[key] = config[key];
@@ -29,7 +29,7 @@ top.Sjl.core.template._applyConfig = function(templateConfig, config) {
     }
 };
 
-top.Sjl.core.template._getParameters = function(templateString) {
+Sjl.core.template._getParameters = function(templateString) {
     var parameters = [];
     var index = templateString.indexOf("{{");
     var subTemplateString = templateString.substr(index+2, templateString.length);
@@ -43,4 +43,4 @@ top.Sjl.core.template._getParameters = function(templateString) {
     return parameters;
 };
 
-top.Sjl.core.template.init();
+Sjl.core.template.init();

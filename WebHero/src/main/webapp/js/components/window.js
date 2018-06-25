@@ -1,6 +1,6 @@
-top.Sjl.component.window._templates = {};
+Sjl.component.window._templates = {};
 
-top.Sjl.component.window._templates.default = {
+Sjl.component.window._templates.default = {
     name: "window",
     parent: "{{parent}}",
     style: {

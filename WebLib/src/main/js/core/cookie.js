@@ -1,8 +1,8 @@
-top.Sjl.core.cookie.init = function() {
+Sjl.core.cookie.init = function() {
     console.info('init cookie core');
 };
 
-top.Sjl.core.cookie.setCookie = function(name, value, expireDays, path) {
+Sjl.core.cookie.setCookie = function(name, value, expireDays, path) {
     var cookieValue = name + "=" + value;
 
     if(expireDays) {
@@ -19,7 +19,7 @@ top.Sjl.core.cookie.setCookie = function(name, value, expireDays, path) {
     document.cookie = cookieValue;
 };
 
-top.Sjl.core.cookie.getCookie = function(name) {
+Sjl.core.cookie.getCookie = function(name) {
     var ca = document.cookie.split(';');
     name = name + "=";
 
@@ -38,4 +38,4 @@ top.Sjl.core.cookie.getCookie = function(name) {
     return "";
 };
 
-top.Sjl.core.cookie.init();
+Sjl.core.cookie.init();
