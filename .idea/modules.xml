@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/DataAccess/DataAccess.iml" filepath="$PROJECT_DIR$/DataAccess/DataAccess.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DataRemote/DataRemote.iml" filepath="$PROJECT_DIR$/DataRemote/DataRemote.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DataSecurity/DataSecurity.iml" filepath="$PROJECT_DIR$/DataSecurity/DataSecurity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DataServices/DataServices.iml" filepath="$PROJECT_DIR$/DataServices/DataServices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebHero/WebHero.iml" filepath="$PROJECT_DIR$/WebHero/WebHero.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebLib/WebLib.iml" filepath="$PROJECT_DIR$/WebLib/WebLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebRest/WebRest.iml" filepath="$PROJECT_DIR$/WebRest/WebRest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/_root.iml" filepath="$PROJECT_DIR$/_root.iml" />
+    </modules>
+  </component>
+</project>
