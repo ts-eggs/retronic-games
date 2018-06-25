@@ -17,7 +17,9 @@ var Sjl = {
         template: {}
     },
     component: {
-        window: {}
+        window: {},
+        selection: {},
+        list: {}
     },
     custom: {}
 };

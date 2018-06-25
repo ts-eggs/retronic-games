@@ -2,11 +2,13 @@ Sjl.core.template.init = function() {
     console.info('init template core');
 
     // map public functions
+    Sjl.getTemplateConfig = Sjl.core.template.getTemplateConfig;
     Sjl.generateElementConfig = Sjl.core.template.generateElementConfig;
 };
 
-Sjl.core.template.generateElementConfig = function(templateConfig, config) {
+Sjl.core.template.generateElementConfig = function(componentScope, config) {
     var scope = Sjl.core.template;
+    var templateConfig = scope._getTemplateConfig(componentScope, config);
     var templateString = JSON.stringify(templateConfig);
     var parameters = scope._getParameters(templateString);
 
@@ -19,6 +21,14 @@ Sjl.core.template.generateElementConfig = function(templateConfig, config) {
     templateConfig = JSON.parse(templateString);
     scope._applyConfig(templateConfig, config);
     return templateConfig;
+};
+
+Sjl.core.template._getTemplateConfig = function(scope, config) {
+    if(scope._templates.hasOwnProperty(config.templateName)) {
+        return scope._templates[config.templateName];
+    }
+
+    return scope._templates['default'];
 };
 
 Sjl.core.template._applyConfig = function(templateConfig, config) {

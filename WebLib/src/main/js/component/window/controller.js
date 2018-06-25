@@ -10,16 +10,6 @@ Sjl.component.window.init = function() {
     Sjl.centerWindow = Sjl.component.window.centerWindow;
 };
 
-Sjl.component.window._getWindowConfig = function(config) {
-    var scope = Sjl.component.window;
-
-    if(scope._templates.hasOwnProperty(config.templateName)) {
-        return scope._templates[config.templateName];
-    }
-
-    return scope._templates['default'];
-};
-
 Sjl.component.window._optimizeConfig = function (config)  {
     config = config || {};
     config.type = "window";
@@ -34,7 +24,7 @@ Sjl.component.window.createWindow = function(config) {
     var scope = Sjl.component.window;
     scope._optimizeConfig(config);
 
-    var elementConfig = Sjl.generateElementConfig(scope._getWindowConfig(config), config);
+    var elementConfig = Sjl.generateElementConfig(scope, config);
     var element = Sjl.createElement(elementConfig, true);
     scope._windows[element.id] = element;
     scope.centerWindow(element);
