@@ -55,11 +55,19 @@ Sjl.core.element._removeElement = function(element) {
         return;
     }
 
+    scope._removeElementsWithParentId(element.id);
     delete scope._elements[element.id];
+};
 
-    if(element.items && element.items.length > 0) {
-        for( var i = 0; i < element.items.length; i++ ) {
-            scope._removeElement(element.items[i]);
+//TODO: geht ned gscheid
+Sjl.core.element._removeElementsWithParentId = function (parentId)  {
+    var scope = Sjl.core.element;
+
+    for( var key in scope._elements ) {
+        if(scope._elements.hasOwnProperty(key)) {
+            if(scope._elements[key].id != parentId && scope._elements[key].parent === parentId) {
+                scope._removeElement(scope._elements[key]);
+            }
         }
     }
 };
@@ -75,7 +83,7 @@ Sjl.core.element._optimizeConfig = function (config)  {
     }
 
     config.type = config.type || "element";
-    config.name = config.name || "element";
+    config.name = config.name || config.type;
     config.class = config.class || config.name;
     config.domType = config.domType || "div";
 };
@@ -87,15 +95,8 @@ Sjl.core.element._setStyling = function(config, element) {
     if(config.style.height) {
         element.dom.style.height = config.style.height + "px";
     }
-};
-
-Sjl.core.element._setChildren = function(config, element, scope) {
-    for(var i = 0; i < config.items.length; i++) {
-        var childConfig = config.items[i];
-        childConfig.parent = element.id;
-        childConfig.type = element.type;
-        childConfig.componentId = element.componentId;
-        scope.createElement(childConfig);
+    if(config.style.float) {
+        element.dom.style.float = config.style.float;
     }
 };
 
@@ -131,17 +132,18 @@ Sjl.core.element._addDomEvent = function(element, event, fnName, componentScope)
 };
 
 Sjl.core.element.createElement = function(config, isComponent) {
+    var componentScope = Sjl.component.hasOwnProperty(config.componentType) ? Sjl.component[config.componentType] : Sjl.component[config.type];
     var scope = Sjl.core.element;
-    var componentScope = Sjl.component[config.type];
     scope._optimizeConfig(config);
 
     var element = config;
     element.dom = document.createElement(config.domType);
     element.dom.id = config.name + "-" + config.id;
-    element.dom.className  = config.name;
+    element.dom.className = config.class;
 
     if(isComponent === true) {
         element.componentId = element.id;
+        element.componentType = element.type;
     }
 
     if(config.style) {
@@ -154,20 +156,26 @@ Sjl.core.element.createElement = function(config, isComponent) {
 
     scope._addElement(element);
 
-    if(config.items && config.items.length > 0) {
-        scope._setChildren(config, element, scope);
-    }
-
     if(config.parent) {
-        var parentElementDom = scope._hasElementId(config.parent) ? scope.getElement(config.parent).dom : null;
+        var parentElement = scope._hasElementId(config.parent) ? scope.getElement(config.parent) : null;
+        var parentElementDom = parentElement ? parentElement.dom : null;
         var parentDom = config.parent === 'body' ? top.document.body : parentElementDom;
+        /*
+        if(parentElement) {
+            var existingElement = Sjl.findElementById(config.id, parentElement);
 
+            if(!existingElement) {
+                parentElement.items = parentElement.items || [];
+                parentElement.items.push(element);
+            }
+        }
+        */
         if(parentDom) {
             parentDom.appendChild(element.dom);
         }
     }
 
-    if(config.events) {
+    if(config.events && componentScope) {
         scope._addDomEvents(config, element, scope, componentScope);
     }
 

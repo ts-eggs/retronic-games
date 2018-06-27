@@ -1,5 +1,5 @@
 Sjl.component.selection.init = function() {
-    console.info('init container component');
+    console.info('init selection component');
 };
 
 Sjl.component.selection._optimizeConfig = function (config)  {
@@ -16,8 +16,8 @@ Sjl.component.selection.create = function(config) {
     var scope = Sjl.component.selection;
     scope._optimizeConfig(config);
 
-    var elementConfig = Sjl.generateElementConfig(scope, config);
-    var element = Sjl.createElement(elementConfig, true);
+    var templateConfig = Sjl.generateTemplateConfig(scope, config);
+    var element = Sjl.createContainer(templateConfig, true);
 
     if(config.hidden != true) {
         Sjl.showElement(element.id);

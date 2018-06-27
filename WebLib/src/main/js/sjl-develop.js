@@ -12,9 +12,10 @@ var Sjl = {
         component : {}
     },
     core: {
-        element: {},
+        template: {},
         cookie: {},
-        template: {}
+        element: {},
+        container: {}
     },
     component: {
         window: {},

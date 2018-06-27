@@ -4,7 +4,7 @@ Sjl.component.window.init = function() {
     console.info('init window component');
 
     // map public functions
-    Sjl.createWindow = Sjl.component.window.createWindow;
+    Sjl.createWindow = Sjl.component.window.create;
     Sjl.getWindow = Sjl.component.window.getWindow;
     Sjl.removeWindow = Sjl.component.window.removeWindow;
     Sjl.centerWindow = Sjl.component.window.centerWindow;
@@ -20,12 +20,21 @@ Sjl.component.window._optimizeConfig = function (config)  {
     config.templateName = config.templateName || 'default';
 };
 
-Sjl.component.window.createWindow = function(config) {
+Sjl.component.window.create = function(config) {
     var scope = Sjl.component.window;
     scope._optimizeConfig(config);
 
-    var elementConfig = Sjl.generateElementConfig(scope, config);
-    var element = Sjl.createElement(elementConfig, true);
+    var items = Sjl.applyConfig([], config.items) || [];
+    var templateConfig = Sjl.generateTemplateConfig(scope, config);
+    var element = Sjl.createContainer(templateConfig, true);
+
+    for( var i = 0; i < items.length; i++ ) {
+        var child = items[i];
+        var content = Sjl.findElementByName("window-content", element);
+        child.parent = content == null ? null : content.id;
+        Sjl.create(child);
+    }
+
     scope._windows[element.id] = element;
     scope.centerWindow(element);
 

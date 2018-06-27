@@ -11,17 +11,6 @@
     cursor: move;
 }
 
-.window-header-title {
-    float: left;
-    width: 50%;
-    height: 30px;
-    line-height: 30px;
-    vertical-align: middle;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
 .window-header-close {
     float: right;
     width: 30px;
@@ -32,6 +21,19 @@
 }
 
 .window-content {
-    width: 100%;
-    height: calc(100% - 30px);
+    width: calc(100% - 20px);
+    height: calc(100% - 90px);
+    padding: 20px 10px;
+    overflow: auto;
+}
+
+.title {
+    float: left;
+    width: 50%;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
 }

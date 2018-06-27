@@ -1,16 +1,18 @@
 Sjl.component.window._templates = {};
 
 Sjl.component.window._templates.default = {
-    name: "window",
+    type: "window",
     parent: "{{parent}}",
     style: {
         width: "{{width}}",
         height: "{{height}}"
     },
     items: [{
+        type: "container",
         name: "window-header",
         items: [{
             name: "window-header-title",
+            class: "title",
             text: "{{title}}"
         }, {
             name: "window-header-close",
@@ -19,6 +21,7 @@ Sjl.component.window._templates.default = {
             }
         }]
     }, {
+        type: "container",
         name: "window-content"
     }]
 };

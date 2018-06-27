@@ -1,7 +1,7 @@
 Sjl.component.list._templates = {};
 
 Sjl.component.list._templates.default = {
-    name: "list",
+    type: "list",
     parent: "{{parent}}",
     style: {
         width: "{{width}}",
