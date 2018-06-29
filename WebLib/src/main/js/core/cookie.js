@@ -1,6 +1,4 @@
-Sjl.core.cookie.init = function() {
-    console.info('init cookie core');
-};
+Sjl.core.cookie.init = function() {};
 
 Sjl.core.cookie.setCookie = function(name, value, expireDays, path) {
     var cookieValue = name + "=" + value;

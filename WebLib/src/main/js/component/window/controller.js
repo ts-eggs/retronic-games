@@ -1,7 +1,7 @@
 Sjl.component.window._windows = {};
 
 Sjl.component.window.init = function() {
-    console.info('init window component');
+    Sjl.applyConfig(Sjl.component.window, Sjl.component.base);
 
     // map public functions
     Sjl.createWindow = Sjl.component.window.create;
@@ -11,38 +11,38 @@ Sjl.component.window.init = function() {
 };
 
 Sjl.component.window._optimizeConfig = function (config)  {
-    config = config || {};
+    Sjl.component.base._optimizeConfig(config);
     config.type = "window";
-    config.parent = config.parent || 'body';
     config.width = config.width || 400;
     config.height = config.height || 400;
-    config.hidden = config.hidden || false;
-    config.templateName = config.templateName || 'default';
 };
 
-Sjl.component.window.create = function(config) {
-    var scope = Sjl.component.window;
-    scope._optimizeConfig(config);
-
+Sjl.component.window.create = function(config, scope) {
+    scope = scope || Sjl.component.window;
+    var element = Sjl.component.base.create(config, scope);
     var items = Sjl.applyConfig([], config.items) || [];
-    var templateConfig = Sjl.generateTemplateConfig(scope, config);
-    var element = Sjl.createContainer(templateConfig, true);
+    var buttons = Sjl.applyConfig([], config.buttons) || [];
+    var i;
 
-    for( var i = 0; i < items.length; i++ ) {
+    for( i = 0; i < items.length; i++ ) {
         var child = items[i];
-        var content = Sjl.findElementByName("window-content", element);
-        child.parent = content == null ? null : content.id;
+        var itemContainer = element.findElementByName("window-content");
+        child.parent = itemContainer == null ? null : itemContainer.id;
         Sjl.create(child);
+    }
+
+    for( i = 0; i < buttons.length; i++ ) {
+        var button = buttons[i];
+        button.style = button.style || {};
+        button.style.float = 'right';
+        var buttonContainer = element.findElementByName("window-buttons");
+        button.parent = buttonContainer == null ? null : buttonContainer.id;
+        Sjl.create(button);
     }
 
     scope._windows[element.id] = element;
     scope.centerWindow(element);
-
-    if(config.hidden != true) {
-        Sjl.showElement(element.id);
-    }
-
-    console.info('created window: '+element.id);
+    return element;
 };
 
 Sjl.component.window.getWindow = function(id) {
@@ -65,7 +65,6 @@ Sjl.component.window.removeWindow = function(id) {
 
     Sjl.removeElement(id);
     delete scope._windows[id];
-    console.info('removed window: '+id);
 };
 
 Sjl.component.window.centerWindow = function(view) {

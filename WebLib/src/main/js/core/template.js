@@ -1,6 +1,4 @@
 Sjl.core.template.init = function() {
-    console.info('init template core');
-
     // map public functions
     Sjl.applyConfig = Sjl.core.template.applyConfig;
     Sjl.generateTemplateConfig = Sjl.core.template.generateTemplateConfig;

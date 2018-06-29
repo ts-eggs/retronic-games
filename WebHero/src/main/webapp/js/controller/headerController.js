@@ -1,17 +1,26 @@
 function createGame() {
     Sjl.createWindow({
         title: 'window title',
+        name: 'window-game',
         items: [{
-            type: "container",
-            layout: "horizontal",
-            items: [{
-                name: "label-select-game",
-                class: "label",
-                text: "Select Game"
-            },{
-                type: "selection",
-                name: "select-game"
-            }]
+            type: "selection",
+            label: "Select Game",
+            name: "select-game"
+        }, {
+            type: "input",
+            label: "Name",
+            name: "input-name"
+        }, {
+            type: "input",
+            label: "Difficult",
+            name: "input-difficult"
+        }],
+        buttons: [{
+            type: "button",
+            text: "Cancel"
+        }, {
+            type: "button",
+            text: "Save"
         }]
     });
 }

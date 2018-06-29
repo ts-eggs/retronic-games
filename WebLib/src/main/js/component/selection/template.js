@@ -7,13 +7,27 @@ Sjl.component.selection._templates.default = {
         width: "{{width}}",
         height: "{{height}}"
     },
+    layout: "horizontal",
     items: [{
-        name: "selection-text",
-        class: "label"
+        name: "label",
+        style: {
+            width: "40%"
+        }
     },{
-        name: "selection-trigger",
+        name: "value",
+        domType: "input",
+        inputType: "text",
+        style: {
+            width: "calc(60% - 30px)",
+            "border-bottom": "1px solid"
+        }
+    },{
+        name: "tool-button-expand",
+        style: {
+            "border-bottom": "1px solid"
+        },
         events: {
-            click: "clickTrigger"
+            click: "clickExpand"
         }
     }]
 };

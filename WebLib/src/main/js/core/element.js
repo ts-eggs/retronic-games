@@ -1,8 +1,6 @@
 Sjl.core.element._elements = {};
 
 Sjl.core.element.init = function() {
-    console.info('init element core');
-
     // map public functions
     Sjl.createElement = Sjl.core.element.createElement;
     Sjl.removeElement = Sjl.core.element.removeElement;
@@ -59,7 +57,6 @@ Sjl.core.element._removeElement = function(element) {
     delete scope._elements[element.id];
 };
 
-//TODO: geht ned gscheid
 Sjl.core.element._removeElementsWithParentId = function (parentId)  {
     var scope = Sjl.core.element;
 
@@ -84,20 +81,28 @@ Sjl.core.element._optimizeConfig = function (config)  {
 
     config.type = config.type || "element";
     config.name = config.name || config.type;
-    config.class = config.class || config.name;
+    var autoClass = config.type != "element" ? config.type : config.name;
+    config.class = config.class || autoClass;
+
+    if(config.class.indexOf("tool-button") != -1) {
+        config.class = "tool-button " + config.class;
+    }
+
     config.domType = config.domType || "div";
 };
 
 Sjl.core.element._setStyling = function(config, element) {
-    if(config.style.width) {
-        element.dom.style.width = config.style.width + "px";
+    var scope = Sjl.core.element;
+
+    for( var key in config.style ) {
+        if(config.style.hasOwnProperty(key) && element.dom.style.hasOwnProperty(key)) {
+            element.dom.style[key] = config.style[key].constructor === Number && scope._isMeasureStyle(key) ?  config.style[key] + "px" : config.style[key];
+        }
     }
-    if(config.style.height) {
-        element.dom.style.height = config.style.height + "px";
-    }
-    if(config.style.float) {
-        element.dom.style.float = config.style.float;
-    }
+};
+
+Sjl.core.element._isMeasureStyle = function(style) {
+    return style == "width" || style == "height" || style == "top" || style == "left" || style.indexOf("margin") != -1 || style.indexOf("padding") != -1;
 };
 
 Sjl.core.element._addDomEvents = function(config, element, scope, componentScope) {
@@ -146,6 +151,10 @@ Sjl.core.element.createElement = function(config, isComponent) {
         element.componentType = element.type;
     }
 
+    if(config.inputType) {
+        element.dom.type = config.inputType;
+    }
+
     if(config.style) {
        scope._setStyling(config, element);
     }
@@ -160,16 +169,7 @@ Sjl.core.element.createElement = function(config, isComponent) {
         var parentElement = scope._hasElementId(config.parent) ? scope.getElement(config.parent) : null;
         var parentElementDom = parentElement ? parentElement.dom : null;
         var parentDom = config.parent === 'body' ? top.document.body : parentElementDom;
-        /*
-        if(parentElement) {
-            var existingElement = Sjl.findElementById(config.id, parentElement);
 
-            if(!existingElement) {
-                parentElement.items = parentElement.items || [];
-                parentElement.items.push(element);
-            }
-        }
-        */
         if(parentDom) {
             parentDom.appendChild(element.dom);
         }
@@ -179,6 +179,7 @@ Sjl.core.element.createElement = function(config, isComponent) {
         scope._addDomEvents(config, element, scope, componentScope);
     }
 
+    console.info("created element: "+element.type+" id: "+element.id);
     return element;
 };
 
@@ -206,6 +207,7 @@ Sjl.core.element.removeElement = function(id) {
         element.dom.parentNode.removeChild(element.dom);
     }
 
+    console.info("removed element: "+element.type+" id: "+element.id);
     scope._removeElement(element);
 };
 

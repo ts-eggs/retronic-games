@@ -18,7 +18,9 @@ var Sjl = {
         container: {}
     },
     component: {
+        base: {},
         window: {},
+        input: {},
         selection: {},
         list: {}
     },
@@ -88,13 +90,15 @@ Sjl._loadComponent = function(packageName, scriptName, scope) {
         return;
     }
 
-    Sjl._createScript("js/lib/" + packageName + "/" + scriptName + "/template.js");
+    if(scriptName != "base") {
+        Sjl._createScript("js/lib/" + packageName + "/" + scriptName + "/template.js");
+        Sjl._createScript("js/lib/" + packageName + "/" + scriptName + "/events.js");
+    }
+
     Sjl._createScript("js/lib/" + packageName + "/" + scriptName + "/controller.js");
-    Sjl._createScript("js/lib/" + packageName + "/" + scriptName + "/events.js");
 };
 
 Sjl._createScript = function(scriptPath) {
-    console.info("load script: "+scriptPath);
     var script = document.createElement("script");
     script.type = "text/javascript";
     script.src = scriptPath;
@@ -102,7 +106,6 @@ Sjl._createScript = function(scriptPath) {
 };
 
 Sjl._createLink = function(stylePath) {
-    console.info("load style: "+stylePath);
     var link = document.createElement("link");
     link.rel = "stylesheet";
     link.type = "text/css";

@@ -1,5 +1,4 @@
 Sjl.core.container.init = function() {
-    console.info('init container core');
     Sjl.applyConfig(Sjl.core.container, Sjl.core.element);
 
     // map public functions
@@ -23,7 +22,7 @@ Sjl.core.container._setChildren = function(config, parent) {
 
         if(parent.layout === "horizontal") {
             childConfig.style = childConfig.style || {};
-            childConfig.style.float = 'left';
+            childConfig.style.float = childConfig.style.float || 'left';
         }
 
         Sjl.create(childConfig);
@@ -53,12 +52,16 @@ Sjl.core.container.createElement = function(config, isComponent) {
         scope._setChildren(config, element);
     }
 
+    element.findElementById = scope.findElementById;
+    element.findElementByName = scope.findElementByName;
     return element;
 };
 
 Sjl.core.container.findElementById = function(id, container) {
+    container = container || this;
+
     if(!container.hasOwnProperty('items')) {
-        console.warn("cannot find element, because container has not property items");
+        console.warn("cannot find element, because container has not property items: "+container.id);
         return null;
     }
 
@@ -72,8 +75,10 @@ Sjl.core.container.findElementById = function(id, container) {
 };
 
 Sjl.core.container.findElementByName = function(name, container) {
+    container = container || this;
+
     if(!container.hasOwnProperty('items')) {
-        console.warn("cannot find element, because container has not property items");
+        console.warn("cannot find element, because container has not property items: "+container.id);
         return null;
     }
 

@@ -1,19 +1,18 @@
 Sjl.component.list.init = function() {
-    console.info('init list component');
+    Sjl.applyConfig(Sjl.component.list, Sjl.component.base);
 };
 
 Sjl.component.list._optimizeConfig = function (config)  {
-    config = config || {};
+    Sjl.component.base._optimizeConfig(config);
     config.type = "list";
-    config.parent = config.parent || 'body';
     config.width = config.width || 200;
     config.height = config.height || 100;
-    config.hidden = config.hidden || true;
-    config.templateName = config.templateName || 'default';
 };
 
-Sjl.component.list.create = function(config) {
-
+Sjl.component.list.create = function(config, scope) {
+    scope = scope || Sjl.component.list;
+    var element = Sjl.component.base.create(config, scope);
+    return element;
 };
 
 Sjl.component.list.init();
