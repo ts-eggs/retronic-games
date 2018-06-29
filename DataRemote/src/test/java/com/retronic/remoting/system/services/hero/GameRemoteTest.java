@@ -36,14 +36,14 @@ public class GameRemoteTest {
         GameDto gameDto = createGame();
         Response response = gameRemote.create(gameDto);
         assertEquals(201, response.getStatus());
-        Integer id = (Integer) response.getEntity();
-        assertNotNull(id);
-        assertTrue(id > 0);
+        GameDto createdDto = (GameDto) response.getEntity();
+        assertNotNull(createdDto);
+        assertTrue(createdDto.getId() > 0);
 
-        response = gameRemote.get(id);
+        response = gameRemote.get(createdDto.getId());
         assertEquals(200, response.getStatus());
         GameDto getDto = (GameDto) response.getEntity();
-        assertEquals(id, getDto.getId());
+        assertEquals(createdDto.getId(), getDto.getId());
         assertNotNull(getDto.getCharacterDtos());
         assertTrue(!getDto.getCharacterDtos().isEmpty());
 
@@ -52,7 +52,7 @@ public class GameRemoteTest {
         response = gameRemote.update(getDto.getId(), getDto);
         assertEquals(200, response.getStatus());
 
-        response = gameRemote.get(id);
+        response = gameRemote.get(createdDto.getId());
         assertEquals(200, response.getStatus());
         GameDto updatedDto = (GameDto) response.getEntity();
         assertEquals(editedName, updatedDto.getName());

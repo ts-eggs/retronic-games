@@ -12,8 +12,8 @@ import com.retronic.remoting.converter.core.UserDtoConverter;
 import com.retronic.remoting.dtos.core.CountryDto;
 import com.retronic.remoting.dtos.core.RoleDto;
 import com.retronic.remoting.dtos.core.UserDto;
-import com.retronic.remoting.services.IGenericRemote;
-import com.retronic.remoting.services.core.UserRemote;
+import com.retronic.remoting.services.core.IUserRemote;
+import com.retronic.remoting.services.core.impl.UserRemote;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 public class UserRemoteTest {
 
     private IUserService userService;
-    private IGenericRemote<UserDto, Integer> userRemote;
+    private IUserRemote userRemote;
 
     @Before
     public void setUp() {

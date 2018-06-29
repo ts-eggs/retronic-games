@@ -1,6 +1,6 @@
 package com.retronic.business.services.core.impl;
 
-import com.retronic.business.services.core.IGenericService;
+import com.retronic.business.services.IGenericService;
 import com.retronic.persistence.daos.core.IGenericDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

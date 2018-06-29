@@ -1,6 +1,6 @@
 package com.retronic.business.mocks.hero;
 
-import com.retronic.business.services.core.IGenericService;
+import com.retronic.business.services.IGenericService;
 import com.retronic.business.services.hero.impl.CharacterService;
 import com.retronic.persistence.entities.hero.Character;
 import com.retronic.persistence.mocks.hero.CharacterDaoMock;

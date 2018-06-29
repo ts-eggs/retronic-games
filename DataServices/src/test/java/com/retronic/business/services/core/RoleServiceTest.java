@@ -1,5 +1,6 @@
 package com.retronic.business.services.core;
 
+import com.retronic.business.services.IGenericService;
 import com.retronic.business.services.core.impl.RoleService;
 import com.retronic.persistence.daos.core.IGenericDao;
 import com.retronic.persistence.entities.core.Role;

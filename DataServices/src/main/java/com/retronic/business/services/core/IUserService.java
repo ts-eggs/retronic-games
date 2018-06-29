@@ -1,5 +1,6 @@
 package com.retronic.business.services.core;
 
+import com.retronic.business.services.IGenericService;
 import com.retronic.persistence.entities.core.User;
 
 public interface IUserService extends IGenericService<User, Integer> {

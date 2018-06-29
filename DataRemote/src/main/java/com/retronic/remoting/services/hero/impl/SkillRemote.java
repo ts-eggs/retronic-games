@@ -1,10 +1,10 @@
-package com.retronic.remoting.services.hero;
+package com.retronic.remoting.services.hero.impl;
 
-import com.retronic.business.services.core.IGenericService;
-import com.retronic.persistence.entities.hero.Item;
+import com.retronic.business.services.IGenericService;
+import com.retronic.persistence.entities.hero.Skill;
 import com.retronic.persistence.utils.DirtyReadTransactional;
 import com.retronic.remoting.converter.IDtoConverter;
-import com.retronic.remoting.dtos.hero.ItemDto;
+import com.retronic.remoting.dtos.hero.SkillDto;
 import com.retronic.remoting.services.IGenericRemote;
 import com.retronic.remoting.utils.ConverterUtils;
 import com.retronic.remoting.utils.ResponseUtil;
@@ -18,45 +18,43 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Service
-@Path("/items")
+@Path("/skills")
 @Produces("application/json")
-public class ItemRemote implements IGenericRemote<ItemDto, Integer> {
+public class SkillRemote implements IGenericRemote<SkillDto, Integer> {
 
     @Autowired
-    private IGenericService<Item, Integer> itemService;
+    private IGenericService<Skill, Integer> skillService;
 
     @Autowired
-    private IDtoConverter<ItemDto, Item> itemDtoConverter;
+    private IDtoConverter<SkillDto, Skill> skillDtoConverter;
 
     @GET
     @Path("/{id}")
     @PreAuthorize("hasAdminAccess()")
     @DirtyReadTransactional
     public Response get(@PathParam("id") Integer id) {
-        Item entity = itemService.get(id);
+        Skill entity = skillService.get(id);
 
-        if (entity == null) {
+        if(entity == null) {
             return ResponseUtil.notFound();
         }
 
-        return ResponseUtil.ok(itemDtoConverter.convertToDto(entity));
+        return ResponseUtil.ok(skillDtoConverter.convertToDto(entity));
     }
 
     @GET
-    @Path("/")
     @PreAuthorize("hasAdminAccess()")
     @DirtyReadTransactional
     public Response getAll() {
-        List<Item> entities = itemService.getAll();
-        return ResponseUtil.ok(ConverterUtils.convertToDTOs(itemDtoConverter, entities));
+        List<Skill> entities = skillService.getAll();
+        return ResponseUtil.ok(ConverterUtils.convertToDTOs(skillDtoConverter, entities));
     }
 
     @POST
-    @Path("/")
     @PreAuthorize("hasSystemAccess()")
     @Transactional
-    public Response create(ItemDto dto) {
-        Integer id = itemService.create(itemDtoConverter.convertToEntity(dto));
+    public Response create(SkillDto dto) {
+        Integer id = skillService.create(skillDtoConverter.convertToEntity(dto));
         return ResponseUtil.created(id);
     }
 
@@ -64,9 +62,9 @@ public class ItemRemote implements IGenericRemote<ItemDto, Integer> {
     @Path("/{id}")
     @PreAuthorize("hasSystemAccess()")
     @Transactional
-    public Response update(@PathParam("id") Integer id, ItemDto dto) {
+    public Response update(@PathParam("id") Integer id, SkillDto dto) {
         dto.setId(id);
-        itemService.update(itemDtoConverter.convertToEntity(dto));
+        skillService.update(skillDtoConverter.convertToEntity(dto));
         return ResponseUtil.updated(id);
     }
 
@@ -75,13 +73,13 @@ public class ItemRemote implements IGenericRemote<ItemDto, Integer> {
     @PreAuthorize("hasSystemAccess()")
     @Transactional
     public Response delete(@PathParam("id") Integer id) {
-        Item entity = itemService.get(id);
+        Skill entity = skillService.get(id);
 
         if (entity == null) {
             return ResponseUtil.notFound();
         }
 
-        itemService.delete(entity);
+        skillService.delete(entity);
         return ResponseUtil.deleted(id);
     }
 }

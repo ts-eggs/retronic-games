@@ -1,7 +1,8 @@
 package com.retronic.remoting.system.services.core;
 
 import com.retronic.remoting.dtos.core.UserDto;
-import com.retronic.remoting.services.IGenericRemote;
+import com.retronic.remoting.dtos.hero.GameDto;
+import com.retronic.remoting.services.core.IUserRemote;
 import com.retronic.remoting.utils.SecurityTestUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 public class UserRemoteTest {
 
     @Autowired
-    private IGenericRemote<UserDto, Integer> userRemote;
+    private IUserRemote userRemote;
 
     @Autowired
     private SecurityTestUtils securityTestUtils;
@@ -39,6 +40,15 @@ public class UserRemoteTest {
         securityTestUtils.setUpAuthentication(1);
         Response response = userRemote.getAll();
         List<UserDto> dtos = (List<UserDto>) response.getEntity();
+        assertTrue(dtos.size() > 0);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGetGames() throws Exception {
+        securityTestUtils.setUpAuthentication(3);
+        Response response = userRemote.getGames(3);
+        List<GameDto> dtos = (List<GameDto>) response.getEntity();
         assertTrue(dtos.size() > 0);
     }
 }

@@ -1,13 +1,13 @@
 package com.retronic.remoting.integration.services.core;
 
 import com.retronic.business.mocks.core.CountryServiceMock;
-import com.retronic.business.services.core.IGenericService;
+import com.retronic.business.services.IGenericService;
 import com.retronic.persistence.entities.core.Country;
 import com.retronic.remoting.converter.IDtoConverter;
 import com.retronic.remoting.converter.core.CountryDtoConverter;
 import com.retronic.remoting.dtos.core.CountryDto;
 import com.retronic.remoting.services.IGenericRemote;
-import com.retronic.remoting.services.core.CountryRemote;
+import com.retronic.remoting.services.core.impl.CountryRemote;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;

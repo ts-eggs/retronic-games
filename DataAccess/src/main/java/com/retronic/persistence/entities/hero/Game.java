@@ -22,6 +22,9 @@ public class Game implements Serializable {
     @Column(name = "difficult", nullable = true)
     private Integer difficult;
 
+    @Column(name = "secret", nullable = true)
+    private String secret;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fkUserId")
     private User user;
@@ -52,6 +55,14 @@ public class Game implements Serializable {
 
     public void setDifficult(Integer difficult) {
         this.difficult = difficult;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     public User getUser() {

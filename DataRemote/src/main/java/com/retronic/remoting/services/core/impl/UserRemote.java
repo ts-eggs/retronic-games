@@ -1,13 +1,16 @@
-package com.retronic.remoting.services.core;
+package com.retronic.remoting.services.core.impl;
 
 import com.retronic.business.services.core.IUserService;
 import com.retronic.persistence.entities.core.User;
+import com.retronic.persistence.entities.hero.Game;
 import com.retronic.persistence.utils.DirtyReadTransactional;
 import com.retronic.remoting.converter.IDtoConverter;
 import com.retronic.remoting.dtos.core.UserDto;
-import com.retronic.remoting.services.IGenericRemote;
+import com.retronic.remoting.dtos.hero.GameDto;
+import com.retronic.remoting.services.core.IUserRemote;
 import com.retronic.remoting.utils.ConverterUtils;
 import com.retronic.remoting.utils.ResponseUtil;
+import com.retronic.security.services.impl.SecurityContextUserLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -20,13 +23,19 @@ import java.util.List;
 @Service
 @Path("/users")
 @Produces("application/json")
-public class UserRemote implements IGenericRemote<UserDto, Integer> {
+public class UserRemote implements IUserRemote {
 
     @Autowired
     private IUserService userService;
 
     @Autowired
     private IDtoConverter<UserDto, User> userDtoConverter;
+
+    @Autowired
+    private IDtoConverter<GameDto, Game> gameDtoConverter;
+
+    @Autowired
+    private SecurityContextUserLocator securityContextUserLocator;
 
     @GET
     @Path("/{id}")
@@ -35,7 +44,7 @@ public class UserRemote implements IGenericRemote<UserDto, Integer> {
     public Response get(@PathParam("id") Integer id) {
         User entity = userService.get(id);
 
-        if(entity == null) {
+        if (entity == null) {
             return ResponseUtil.notFound();
         }
 
@@ -43,7 +52,6 @@ public class UserRemote implements IGenericRemote<UserDto, Integer> {
     }
 
     @GET
-    @Path("/")
     @PreAuthorize("hasAdminAccess()")
     @DirtyReadTransactional
     public Response getAll() {
@@ -52,7 +60,6 @@ public class UserRemote implements IGenericRemote<UserDto, Integer> {
     }
 
     @POST
-    @Path("/")
     @PreAuthorize("hasAdminAccess()")
     @Transactional
     public Response create(UserDto dto) {
@@ -83,5 +90,25 @@ public class UserRemote implements IGenericRemote<UserDto, Integer> {
 
         userService.delete(entity);
         return ResponseUtil.deleted(id);
+    }
+
+    @GET
+    @Path("/{id}/games")
+    @PreAuthorize("isAuthenticated()")
+    @DirtyReadTransactional
+    public Response getGames(@PathParam("id") Integer id) {
+        User user = securityContextUserLocator.getSecurityContextUser();
+
+        if (!id.equals(user.getId())) {
+            return ResponseUtil.notAuthorized();
+        }
+
+        List<Game> games = user.getGames();
+
+        if (games == null) {
+            return ResponseUtil.notFound();
+        }
+
+        return ResponseUtil.ok(ConverterUtils.convertToDTOs(gameDtoConverter, games));
     }
 }

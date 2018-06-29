@@ -1,6 +1,6 @@
-package com.retronic.remoting.services.hero;
+package com.retronic.remoting.services.hero.impl;
 
-import com.retronic.business.services.core.IGenericService;
+import com.retronic.business.services.IGenericService;
 import com.retronic.persistence.entities.hero.Armor;
 import com.retronic.persistence.utils.DirtyReadTransactional;
 import com.retronic.remoting.converter.IDtoConverter;
@@ -43,7 +43,6 @@ public class ArmorRemote implements IGenericRemote<ArmorDto, Integer> {
     }
 
     @GET
-    @Path("/")
     @PreAuthorize("hasAdminAccess()")
     @DirtyReadTransactional
     public Response getAll() {
@@ -52,7 +51,6 @@ public class ArmorRemote implements IGenericRemote<ArmorDto, Integer> {
     }
 
     @POST
-    @Path("/")
     @PreAuthorize("hasSystemAccess()")
     @Transactional
     public Response create(ArmorDto dto) {

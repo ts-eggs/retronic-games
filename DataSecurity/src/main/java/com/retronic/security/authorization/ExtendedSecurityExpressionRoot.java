@@ -1,5 +1,6 @@
 package com.retronic.security.authorization;
 
+import com.retronic.persistence.entities.core.User;
 import com.retronic.security.entities.SecurityUserDetails;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
@@ -44,24 +45,39 @@ public class ExtendedSecurityExpressionRoot extends SecurityExpressionRoot imple
         return target;
     }
 
+    private User getAuthUser() {
+        Object principal = authentication.getPrincipal();
+
+        if (principal.getClass().equals(SecurityUserDetails.class)) {
+            return ((SecurityUserDetails) principal).getUser();
+        }
+
+        return null;
+    }
+
     public boolean hasSystemAccess() {
-        SecurityUserDetails securityUser = (SecurityUserDetails) authentication.getPrincipal();
-        return securityUser.getUser().hasSystemAccess();
+        User authUser = this.getAuthUser();
+        return authUser != null && authUser.hasSystemAccess();
     }
 
     public boolean hasAdminAccess() {
-        SecurityUserDetails securityUser = (SecurityUserDetails) authentication.getPrincipal();
-        return securityUser.getUser().hasAdminAccess();
+        User authUser = this.getAuthUser();
+        return authUser != null && authUser.hasAdminAccess();
     }
 
     public boolean hasAdvancedAccess() {
-        SecurityUserDetails securityUser = (SecurityUserDetails) authentication.getPrincipal();
-        return securityUser.getUser().hasAdvancedAccess();
+        User authUser = this.getAuthUser();
+        return authUser != null && authUser.hasAdvancedAccess();
     }
 
     public boolean hasBaseAccess() {
-        SecurityUserDetails securityUser = (SecurityUserDetails) authentication.getPrincipal();
-        return securityUser.getUser().hasBaseAccess();
+        User authUser = this.getAuthUser();
+        return authUser != null && authUser.hasBaseAccess();
+    }
+
+    public boolean isUser() {
+        User authUser = this.getAuthUser();
+        return authUser != null;
     }
 
     public boolean freeForAll() {

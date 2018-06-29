@@ -1,7 +1,7 @@
 package com.retronic.remoting.integration.services.hero;
 
 import com.retronic.business.mocks.hero.CharacterServiceMock;
-import com.retronic.business.services.core.IGenericService;
+import com.retronic.business.services.IGenericService;
 import com.retronic.persistence.entities.core.Country;
 import com.retronic.persistence.entities.core.Role;
 import com.retronic.persistence.entities.core.User;
@@ -18,7 +18,7 @@ import com.retronic.remoting.dtos.core.RoleDto;
 import com.retronic.remoting.dtos.core.UserDto;
 import com.retronic.remoting.dtos.hero.*;
 import com.retronic.remoting.services.IGenericRemote;
-import com.retronic.remoting.services.hero.CharacterRemote;
+import com.retronic.remoting.services.hero.impl.CharacterRemote;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;

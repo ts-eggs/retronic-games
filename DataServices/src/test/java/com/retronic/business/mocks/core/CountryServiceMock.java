@@ -1,6 +1,6 @@
 package com.retronic.business.mocks.core;
 
-import com.retronic.business.services.core.IGenericService;
+import com.retronic.business.services.IGenericService;
 import com.retronic.business.services.core.impl.CountryService;
 import com.retronic.persistence.entities.core.Country;
 import com.retronic.persistence.mocks.core.CountryDaoMock;

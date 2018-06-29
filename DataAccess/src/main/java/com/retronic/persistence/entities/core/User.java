@@ -1,10 +1,12 @@
 package com.retronic.persistence.entities.core;
 
+import com.retronic.persistence.entities.hero.Game;
 import com.retronic.persistence.enums.core.RoleType;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.List;
 
 @Entity
 @Table(name = "[user]", schema = "rgc")
@@ -59,6 +61,10 @@ public class User implements Serializable {
 
     @Column(name = "created")
     private Calendar created;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "rgh.game", joinColumns = {@JoinColumn(name = "fkUserId", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "id")})
+    private List<Game> games;
 
     public Integer getId() {
         return id;
@@ -178,6 +184,14 @@ public class User implements Serializable {
 
     public void setCreated(Calendar created) {
         this.created = created;
+    }
+
+    public List<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(List<Game> games) {
+        this.games = games;
     }
 
     public boolean hasRole(String role) {

@@ -1,4 +1,4 @@
-package com.retronic.business.services.core;
+package com.retronic.business.services;
 
 import java.io.Serializable;
 import java.util.List;

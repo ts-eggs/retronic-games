@@ -1,7 +1,7 @@
 package com.retronic.remoting.integration.services.hero;
 
 import com.retronic.business.mocks.hero.WeaponServiceMock;
-import com.retronic.business.services.core.IGenericService;
+import com.retronic.business.services.IGenericService;
 import com.retronic.persistence.entities.hero.Skill;
 import com.retronic.persistence.entities.hero.Weapon;
 import com.retronic.remoting.converter.IDtoConverter;
@@ -10,7 +10,7 @@ import com.retronic.remoting.converter.hero.WeaponDtoConverter;
 import com.retronic.remoting.dtos.hero.SkillDto;
 import com.retronic.remoting.dtos.hero.WeaponDto;
 import com.retronic.remoting.services.IGenericRemote;
-import com.retronic.remoting.services.hero.WeaponRemote;
+import com.retronic.remoting.services.hero.impl.WeaponRemote;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;

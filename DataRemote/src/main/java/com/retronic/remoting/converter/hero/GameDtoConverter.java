@@ -1,5 +1,6 @@
 package com.retronic.remoting.converter.hero;
 
+import com.retronic.business.services.core.IUserService;
 import com.retronic.persistence.entities.core.User;
 import com.retronic.persistence.entities.hero.Character;
 import com.retronic.persistence.entities.hero.Game;
@@ -18,6 +19,9 @@ import java.util.stream.Collectors;
 public class GameDtoConverter implements IDtoConverter<GameDto, Game> {
 
     @Autowired
+    private IUserService userService;
+
+    @Autowired
     private IDtoConverter<UserDto, User> userDtoConverter;
 
     @Autowired
@@ -28,9 +32,10 @@ public class GameDtoConverter implements IDtoConverter<GameDto, Game> {
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setDifficult(entity.getDifficult());
+        dto.setSecret(entity.getSecret());
 
-        if(entity.getUser() != null) {
-            dto.setUserDto(userDtoConverter.convertToDto(entity.getUser()));
+        if (entity.getUser() != null) {
+            dto.setUserId(entity.getUser().getId());
         }
 
         dto.setCharacterReference(GameDto.URL_REPRESENTATION + "/" + entity.getId() + "/" + CharacterDto.URL_REPRESENTATION);
@@ -48,9 +53,10 @@ public class GameDtoConverter implements IDtoConverter<GameDto, Game> {
         entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setDifficult(dto.getDifficult());
+        entity.setSecret(dto.getSecret());
 
-        if(dto.getUserDto() != null) {
-            entity.setUser(userDtoConverter.convertToEntity(dto.getUserDto()));
+        if (dto.getUserId() != null) {
+            entity.setUser(userService.get(dto.getUserId()));
         }
 
         if (dto.getCharacterDtos() != null && !dto.getCharacterDtos().isEmpty()) {

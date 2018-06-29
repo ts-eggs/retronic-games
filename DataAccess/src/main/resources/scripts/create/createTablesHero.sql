@@ -170,6 +170,7 @@ begin
 		id int not null,
 		name varchar(64),
 		difficult int not null default 1,
+		secret varchar(64),
 		fkUserId int null,
 		constraint pk_game primary key (id),
 		constraint fk_game_user foreign key (fkUserId) references [rgc].[user](id)

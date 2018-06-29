@@ -1,13 +1,13 @@
 package com.retronic.remoting.integration.services.core;
 
 import com.retronic.business.mocks.core.RoleServiceMock;
-import com.retronic.business.services.core.IGenericService;
+import com.retronic.business.services.IGenericService;
 import com.retronic.persistence.entities.core.Role;
 import com.retronic.remoting.converter.IDtoConverter;
 import com.retronic.remoting.converter.core.RoleDtoConverter;
 import com.retronic.remoting.dtos.core.RoleDto;
 import com.retronic.remoting.services.IGenericRemote;
-import com.retronic.remoting.services.core.RoleRemote;
+import com.retronic.remoting.services.core.impl.RoleRemote;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;

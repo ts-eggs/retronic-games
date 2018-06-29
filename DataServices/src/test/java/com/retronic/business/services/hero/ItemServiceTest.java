@@ -1,6 +1,6 @@
 package com.retronic.business.services.hero;
 
-import com.retronic.business.services.core.IGenericService;
+import com.retronic.business.services.IGenericService;
 import com.retronic.business.services.hero.impl.ItemService;
 import com.retronic.persistence.daos.core.IGenericDao;
 import com.retronic.persistence.entities.hero.Item;

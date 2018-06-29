@@ -1,13 +1,15 @@
-package com.retronic.remoting.services.hero;
+package com.retronic.remoting.services.hero.impl;
 
-import com.retronic.business.services.core.IGenericService;
+import com.retronic.business.services.hero.IGameService;
+import com.retronic.persistence.entities.core.User;
 import com.retronic.persistence.entities.hero.Game;
 import com.retronic.persistence.utils.DirtyReadTransactional;
 import com.retronic.remoting.converter.IDtoConverter;
 import com.retronic.remoting.dtos.hero.GameDto;
-import com.retronic.remoting.services.IGenericRemote;
+import com.retronic.remoting.services.hero.IGameRemote;
 import com.retronic.remoting.utils.ConverterUtils;
 import com.retronic.remoting.utils.ResponseUtil;
+import com.retronic.security.services.impl.SecurityContextUserLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -20,13 +22,16 @@ import java.util.List;
 @Service
 @Path("/games")
 @Produces("application/json")
-public class GameRemote implements IGenericRemote<GameDto, Integer> {
+public class GameRemote implements IGameRemote {
 
     @Autowired
-    private IGenericService<Game, Integer> gameService;
+    private IGameService gameService;
 
     @Autowired
     private IDtoConverter<GameDto, Game> gameDtoConverter;
+
+    @Autowired
+    private SecurityContextUserLocator securityContextUserLocator;
 
     @GET
     @Path("/{id}")
@@ -43,7 +48,6 @@ public class GameRemote implements IGenericRemote<GameDto, Integer> {
     }
 
     @GET
-    @Path("/")
     @PreAuthorize("hasAdminAccess()")
     @DirtyReadTransactional
     public Response getAll() {
@@ -52,12 +56,19 @@ public class GameRemote implements IGenericRemote<GameDto, Integer> {
     }
 
     @POST
-    @Path("/")
     @PreAuthorize("freeForAll()")
     @Transactional
     public Response create(GameDto dto) {
-        Integer id = gameService.create(gameDtoConverter.convertToEntity(dto));
-        return ResponseUtil.created(id);
+        if(dto.getUserId() != null) {
+            User user = securityContextUserLocator.getSecurityContextUser();
+
+            if(user == null || !user.getId().equals(dto.getUserId())) {
+                return ResponseUtil.notAuthorized();
+            }
+        }
+
+        Game game = gameService.createGame(gameDtoConverter.convertToEntity(dto));
+        return ResponseUtil.created(gameDtoConverter.convertToDto(game));
     }
 
     @PUT
@@ -83,5 +94,19 @@ public class GameRemote implements IGenericRemote<GameDto, Integer> {
 
         gameService.delete(entity);
         return ResponseUtil.deleted(id);
+    }
+
+    @GET
+    @Path("/secret/{secret}")
+    @PreAuthorize("freeForAll()")
+    @DirtyReadTransactional
+    public Response getBySecret(@PathParam("secret") String secret) {
+        Game game = gameService.getBySecret(secret);
+
+        if (game == null) {
+            return ResponseUtil.notFound();
+        }
+
+        return ResponseUtil.ok(gameDtoConverter.convertToDto(game));
     }
 }

@@ -1,6 +1,6 @@
 package com.retronic.business.mocks.core;
 
-import com.retronic.business.services.core.IGenericService;
+import com.retronic.business.services.IGenericService;
 import com.retronic.business.services.core.impl.RoleService;
 import com.retronic.persistence.entities.core.Role;
 import com.retronic.persistence.mocks.core.RoleDaoMock;

@@ -1,4 +1,4 @@
-package com.retronic.remoting.services.core;
+package com.retronic.remoting.services.core.impl;
 
 import com.retronic.business.services.core.impl.RoleService;
 import com.retronic.persistence.entities.core.Role;
@@ -43,7 +43,6 @@ public class RoleRemote implements IGenericRemote<RoleDto, Integer> {
     }
 
     @GET
-    @Path("/")
     @PreAuthorize("hasAdminAccess()")
     @DirtyReadTransactional
     public Response getAll() {
@@ -52,7 +51,6 @@ public class RoleRemote implements IGenericRemote<RoleDto, Integer> {
     }
 
     @POST
-    @Path("/")
     @PreAuthorize("hasSystemAccess()")
     @Transactional
     public Response create(RoleDto dto) {

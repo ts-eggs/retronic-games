@@ -57,9 +57,11 @@ begin
         city varchar(128) null,
         lastlogin datetime null,
         created datetime null,
+        fkAdminId int null,
         fkRoleId int not null,
         fkCountryId int not null,
 		constraint pk_user primary key (id),
+		constraint fk_user_user foreign key (fkAdminId) references [rgc].[user](id),
 		constraint fk_user_role foreign key (fkRoleId) references [rgc].[role](id),
 		constraint fk_user_country foreign key (fkCountryId) references [rgc].[country](id)
 	)
@@ -93,9 +95,9 @@ begin
 	create table [rgh].[race] (
 		id int identity(1,1) not null,
 		name varchar(64),
-		skillId int not null,
+		fkSkillId int not null,
 		constraint pk_race primary key (id),
-		constraint fk_race_skill foreign key (skillId) references [rgh].[skill](id)
+		constraint fk_race_skill foreign key (fkSkillId) references [rgh].[skill](id)
 	)
 end
 go
@@ -113,11 +115,11 @@ go
 if(not exists (select * from information_schema.tables where table_schema = 'rgh' and table_name = 'classSkillRefs'))
 begin
 	create table [rgh].[classSkillRefs] (
-		skillId int not null,
-		classId int not null,
-		constraint pk_classSkillRefs primary key (skillId, classId),
-		constraint fk_classSkillRefs_skill foreign key (skillId) references [rgh].[skill](id),
-		constraint fk_classSkillRefs_class foreign key (classId) references [rgh].[class](id)
+		fkSkillId int not null,
+		fkClassId int not null,
+		constraint pk_classSkillRefs primary key (fkSkillId, fkClassId),
+		constraint fk_classSkillRefs_skill foreign key (fkSkillId) references [rgh].[skill](id),
+		constraint fk_classSkillRefs_class foreign key (fkClassId) references [rgh].[class](id)
 	)
 end
 go
@@ -132,9 +134,9 @@ begin
 		hands int default 1,
 		costs int default 1,
 		value float default 1,
-		skillId int null,
+		fkSkillId int null,
 		constraint pk_armor primary key (id),
-		constraint fk_armor_skill foreign key (skillId) references [rgh].[skill](id)
+		constraint fk_armor_skill foreign key (fkSkillId) references [rgh].[skill](id)
 	)
 end
 go
@@ -149,9 +151,9 @@ begin
 		hands int default 1,
 		costs int default 1,
 		value float default 1,
-		skillId int null,
+		fkSkillId int null,
 		constraint pk_weapon primary key (id),
-		constraint fk_weapon_skill foreign key (skillId) references [rgh].[skill](id)
+		constraint fk_weapon_skill foreign key (fkSkillId) references [rgh].[skill](id)
 	)
 end
 go
@@ -165,9 +167,9 @@ begin
 		[level] int default 1,
 		costs int default 1,
 		value float default 1,
-		skillId int null,
+		fkSkillId int null,
 		constraint pk_item primary key (id),
-		constraint fk_item_skill foreign key (skillId) references [rgh].[skill](id)
+		constraint fk_item_skill foreign key (fkSkillId) references [rgh].[skill](id)
 	)
 end
 go
@@ -182,19 +184,37 @@ begin
 		strength int not null default 1,
 		vitality int not null default 1,
 		dexterity int not null default 1,
-		raceId int not null,
-		classId int not null,
-		armorHeadId int null,
-		armorBodyId int null,
-		weaponRightId int null,
-		weaponLeftId int null,
-		constraint pk_player primary key (id),
-		constraint fk_character_race foreign key (raceId) references [rgh].[race](id),
-		constraint fk_character_class foreign key (classId) references [rgh].[class](id),
-		constraint fk_character_armor_head foreign key (armorHeadId) references [rgh].[armor](id),
-		constraint fk_character_armor_body foreign key (armorBodyId) references [rgh].[armor](id),
-		constraint fk_character_weapon_right foreign key (weaponRightId) references [rgh].[weapon](id),
-		constraint fk_character_weapon_left foreign key (weaponLeftId) references [rgh].[weapon](id)
+		fkUserId int null,
+		fkRaceId int not null,
+		fkClassId int not null,
+		constraint pk_character primary key (id),
+		constraint fk_character_user foreign key (fkUserId) references [rgc].[user](id),
+		constraint fk_character_race foreign key (fkRaceId) references [rgh].[race](id),
+		constraint fk_character_class foreign key (fkClassId) references [rgh].[class](id)
+	)
+end
+go
+
+if(not exists (select * from information_schema.tables where table_schema = 'rgh' and table_name = 'characterArmorRefs'))
+begin
+	create table [rgh].[characterArmorRefs] (
+		fkCharacterId int not null,
+		fkArmorId int not null,
+		constraint pk_characterArmorRefs primary key (fkCharacterId, fkArmorId),
+		constraint fk_characterArmorRefs_character foreign key (fkCharacterId) references [rgh].[character](id),
+		constraint fk_characterArmorRefs_armor foreign key (fkArmorId) references [rgh].[armor](id)
+	)
+end
+go
+
+if(not exists (select * from information_schema.tables where table_schema = 'rgh' and table_name = 'characterWeaponRefs'))
+begin
+	create table [rgh].[characterWeaponRefs] (
+		fkCharacterId int not null,
+		fkWeaponId int not null,
+		constraint pk_characterWeaponRefs primary key (fkCharacterId, fkWeaponId),
+		constraint fk_characterWeaponRefs_character foreign key (fkCharacterId) references [rgh].[character](id),
+		constraint fk_characterWeaponRefs_weapon foreign key (fkWeaponId) references [rgh].[weapon](id)
 	)
 end
 go
@@ -202,11 +222,37 @@ go
 if(not exists (select * from information_schema.tables where table_schema = 'rgh' and table_name = 'characterItemRefs'))
 begin
 	create table [rgh].[characterItemRefs] (
-		characterId int not null,
-		itemId int not null,
-		constraint pk_characterItemRefs primary key (characterId, itemId),
-		constraint fk_characterItemRefs_character foreign key (characterId) references [rgh].[character](id),
-		constraint fk_characterItemRefs_item foreign key (itemId) references [rgh].[item](id)
+		fkCharacterId int not null,
+		fkItemId int not null,
+		constraint pk_characterItemRefs primary key (fkCharacterId, fkItemId),
+		constraint fk_characterItemRefs_character foreign key (fkCharacterId) references [rgh].[character](id),
+		constraint fk_characterItemRefs_item foreign key (fkItemId) references [rgh].[item](id)
+	)
+end
+go
+
+if(not exists (select * from information_schema.tables where table_schema = 'rgh' and table_name = 'game'))
+begin
+	create table [rgh].[game] (
+		id int not null,
+		name varchar(64),
+		difficult int not null default 1,
+		secret varchar(64),
+		fkUserId int null,
+		constraint pk_game primary key (id),
+		constraint fk_game_user foreign key (fkUserId) references [rgc].[user](id)
+	)
+end
+go
+
+if(not exists (select * from information_schema.tables where table_schema = 'rgh' and table_name = 'gameCharacterRef'))
+begin
+	create table [rgh].[gameCharacterRef] (
+		fkGameId int not null,
+		fkCharacterId int not null,
+		constraint pk_gameCharacterRef primary key (fkGameId, fkCharacterId),
+		constraint fk_gameCharacterRef_game foreign key (fkGameId) references [rgh].[game](id),
+		constraint fk_gameCharacterRef_character foreign key (fkCharacterId) references [rgh].[character](id)
 	)
 end
 go

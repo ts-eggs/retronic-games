@@ -1,10 +1,10 @@
-package com.retronic.remoting.services.core;
+package com.retronic.remoting.services.hero.impl;
 
-import com.retronic.business.services.core.impl.CountryService;
-import com.retronic.persistence.entities.core.Country;
+import com.retronic.business.services.IGenericService;
+import com.retronic.persistence.entities.hero.Item;
 import com.retronic.persistence.utils.DirtyReadTransactional;
 import com.retronic.remoting.converter.IDtoConverter;
-import com.retronic.remoting.dtos.core.CountryDto;
+import com.retronic.remoting.dtos.hero.ItemDto;
 import com.retronic.remoting.services.IGenericRemote;
 import com.retronic.remoting.utils.ConverterUtils;
 import com.retronic.remoting.utils.ResponseUtil;
@@ -18,45 +18,43 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Service
-@Path("/countries")
+@Path("/items")
 @Produces("application/json")
-public class CountryRemote implements IGenericRemote<CountryDto, Integer> {
+public class ItemRemote implements IGenericRemote<ItemDto, Integer> {
 
     @Autowired
-    private CountryService countryService;
+    private IGenericService<Item, Integer> itemService;
 
     @Autowired
-    private IDtoConverter<CountryDto, Country> countryDtoConverter;
+    private IDtoConverter<ItemDto, Item> itemDtoConverter;
 
     @GET
     @Path("/{id}")
     @PreAuthorize("hasAdminAccess()")
     @DirtyReadTransactional
     public Response get(@PathParam("id") Integer id) {
-        Country entity = countryService.get(id);
+        Item entity = itemService.get(id);
 
-        if(entity == null) {
+        if (entity == null) {
             return ResponseUtil.notFound();
         }
 
-        return ResponseUtil.ok(countryDtoConverter.convertToDto(entity));
+        return ResponseUtil.ok(itemDtoConverter.convertToDto(entity));
     }
 
     @GET
-    @Path("/")
     @PreAuthorize("hasAdminAccess()")
     @DirtyReadTransactional
     public Response getAll() {
-        List<Country> entities = countryService.getAll();
-        return ResponseUtil.ok(ConverterUtils.convertToDTOs(countryDtoConverter, entities));
+        List<Item> entities = itemService.getAll();
+        return ResponseUtil.ok(ConverterUtils.convertToDTOs(itemDtoConverter, entities));
     }
 
     @POST
-    @Path("/")
     @PreAuthorize("hasSystemAccess()")
     @Transactional
-    public Response create(CountryDto dto) {
-        Integer id = countryService.create(countryDtoConverter.convertToEntity(dto));
+    public Response create(ItemDto dto) {
+        Integer id = itemService.create(itemDtoConverter.convertToEntity(dto));
         return ResponseUtil.created(id);
     }
 
@@ -64,9 +62,9 @@ public class CountryRemote implements IGenericRemote<CountryDto, Integer> {
     @Path("/{id}")
     @PreAuthorize("hasSystemAccess()")
     @Transactional
-    public Response update(@PathParam("id") Integer id, CountryDto dto) {
+    public Response update(@PathParam("id") Integer id, ItemDto dto) {
         dto.setId(id);
-        countryService.update(countryDtoConverter.convertToEntity(dto));
+        itemService.update(itemDtoConverter.convertToEntity(dto));
         return ResponseUtil.updated(id);
     }
 
@@ -75,13 +73,13 @@ public class CountryRemote implements IGenericRemote<CountryDto, Integer> {
     @PreAuthorize("hasSystemAccess()")
     @Transactional
     public Response delete(@PathParam("id") Integer id) {
-        Country entity = countryService.get(id);
+        Item entity = itemService.get(id);
 
         if (entity == null) {
             return ResponseUtil.notFound();
         }
 
-        countryService.delete(entity);
+        itemService.delete(entity);
         return ResponseUtil.deleted(id);
     }
 }

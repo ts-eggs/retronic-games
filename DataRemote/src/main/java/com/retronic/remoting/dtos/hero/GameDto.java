@@ -1,7 +1,5 @@
 package com.retronic.remoting.dtos.hero;
 
-import com.retronic.remoting.dtos.core.UserDto;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,7 +15,9 @@ public class GameDto implements Serializable {
 
     private Integer difficult;
 
-    private UserDto userDto;
+    private String secret;
+
+    private Integer userId;
 
     private List<CharacterDto> characterDtos;
 
@@ -47,12 +47,20 @@ public class GameDto implements Serializable {
         this.difficult = difficult;
     }
 
-    public UserDto getUserDto() {
-        return userDto;
+    public String getSecret() {
+        return secret;
     }
 
-    public void setUserDto(UserDto userDto) {
-        this.userDto = userDto;
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public List<CharacterDto> getCharacterDtos() {
