@@ -7,6 +7,10 @@ Sjl.core.template.init = function() {
 Sjl.core.template.applyConfig = function(configBase, configApply) {
     var scope = Sjl.core.template;
 
+    if(!configApply || !configBase) {
+        return;
+    }
+
     if(configApply.constructor !== configBase.constructor) {
         console.error("cannot apply config, because both configs are not of the same type: "+configBase.constructor.name+" - "+configApply.constructor.name);
         return;

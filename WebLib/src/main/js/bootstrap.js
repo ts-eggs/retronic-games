@@ -6,8 +6,10 @@
  * if url parameter develop is set, load sjl lib packages & files
  */
 (function() {
-    var scriptFile = "sjl.js",
+    var libFile = "sjl.js",
+        configFile = "config/config.js",
         queryString = window.location.search,
+        hostname = window.location.hostname,
         scripts = document.getElementsByTagName('script'),
         path, i, ln, scriptSrc, match;
 
@@ -22,10 +24,12 @@
     }
 
     if (queryString.match('(\\?|&)debug') !== null) {
-        scriptFile = "sjl-debug.js";
-    } else if (queryString.match('(\\?|&)develop') !== null) {
-        scriptFile = "sjl-develop.js";
+        libFile = "sjl-debug.js";
+    } else if (queryString.match('(\\?|&)develop') !== null || hostname == 'localhost') {
+        configFile = "config/config-develop.js";
     }
 
-    document.write('<script type="text/javascript" charset="UTF-8" src="' + path + scriptFile + '"></script>');
+    document.write('<script type="text/javascript" charset="UTF-8" src="' + path + libFile + '"></script>');
+    document.write('<script type="text/javascript" charset="UTF-8" src="' + path + configFile + '"></script>');
+    document.write('<script type="text/javascript" charset="UTF-8" src="' + path + 'loader.js"></script>');
 })();

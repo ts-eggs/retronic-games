@@ -105,7 +105,7 @@ Sjl.core.element._isMeasureStyle = function(style) {
     return style == "width" || style == "height" || style == "top" || style == "left" || style.indexOf("margin") != -1 || style.indexOf("padding") != -1;
 };
 
-Sjl.core.element._addDomEvents = function(config, element, scope, componentScope) {
+Sjl.core.element._addDomEvents = function(events, callbacks, element, scope, componentScope) {
     if(!scope) {
         console.warn('could not add dom events, scope undefined for dom: '+element.dom.id);
         return;
@@ -116,22 +116,49 @@ Sjl.core.element._addDomEvents = function(config, element, scope, componentScope
         return;
     }
 
-    for( var key in config.events ) {
-        if(config.events.hasOwnProperty(key)) {
-            scope._addDomEvent(element, key, config.events[key], componentScope);
+    var key;
+
+    if(events) {
+        for( key in events ) {
+            if(events.hasOwnProperty(key)) {
+                var fnName = events[key];
+
+                if(!componentScope._eventFunctions.hasOwnProperty(fnName)) {
+                    console.warn('no function defined for component scope: '+componentScope.toString()+' fn: '+fnName);
+                    continue;
+                }
+
+                scope._addDomEvent(element, key, componentScope._eventFunctions[fnName]);
+            }
+        }
+    }
+
+    if(callbacks) {
+        for( key in callbacks ) {
+            if(callbacks.hasOwnProperty(key)) {
+                var currentScope = Sjl;
+                var packages = callbacks[key].split(".");
+
+                for( var i = 0; i < packages.length; i++ ) {
+                    if(packages[i] === "Sjl") {
+                        continue;
+                    }
+
+                    currentScope = currentScope[packages[i]];
+                }
+
+                if(currentScope.constructor === Function) {
+                    scope._addDomEvent(element, key, currentScope);
+                }
+            }
         }
     }
 };
 
-Sjl.core.element._addDomEvent = function(element, event, fnName, componentScope) {
-    if(!componentScope._eventFunctions.hasOwnProperty(fnName)) {
-        console.warn('no function defined for component scope: '+componentScope.toString()+' fn: '+fnName);
-        return;
-    }
-
+Sjl.core.element._addDomEvent = function(element, event, fn) {
     if(event === 'click') {
         element.dom.onclick = function(e) {
-            componentScope._eventFunctions[fnName](element, e);
+            fn(element, e);
         }
     }
 };
@@ -175,11 +202,11 @@ Sjl.core.element.createElement = function(config, isComponent) {
         }
     }
 
-    if(config.events && componentScope) {
-        scope._addDomEvents(config, element, scope, componentScope);
+    if(componentScope) {
+        scope._addDomEvents(config.events, config.callbacks, element, scope, componentScope);
     }
 
-    console.info("created element: "+element.type+" id: "+element.id);
+    // console.info("created element: "+element.type+" id: "+element.id);
     return element;
 };
 
@@ -207,7 +234,7 @@ Sjl.core.element.removeElement = function(id) {
         element.dom.parentNode.removeChild(element.dom);
     }
 
-    console.info("removed element: "+element.type+" id: "+element.id);
+    // console.info("removed element: "+element.type+" id: "+element.id);
     scope._removeElement(element);
 };
 

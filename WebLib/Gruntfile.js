@@ -35,7 +35,7 @@ module.exports = function(grunt) {
 				files: [{
 					src: [
 						sourceDir + '/sjl.js', sourceDir + '/core/*.js', sourceDir + '/component/**/*.js',
-						'!' + sourceDir + '/bootstrap.js', '!' + sourceDir + '/sjl-develop.js'
+						'!' + sourceDir + '/bootstrap.js', '!' + sourceDir + '/config/*.js'
 					],
 					dest: buildDir + '/sjl-debug.js'
 				}]

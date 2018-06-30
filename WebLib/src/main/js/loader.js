@@ -1,32 +1,3 @@
-/**
- *
- * Simple Javascript Library Sjl
- * @Author ts
- * @Version 1.0
- *
- */
-
-var Sjl = {
-    style: {
-        core : {},
-        component : {}
-    },
-    core: {
-        template: {},
-        cookie: {},
-        element: {},
-        container: {}
-    },
-    component: {
-        base: {},
-        window: {},
-        input: {},
-        selection: {},
-        list: {}
-    },
-    custom: {}
-};
-
 Sjl.init = function() {
     var packageName;
 
@@ -40,12 +11,12 @@ Sjl.init = function() {
     // load custom packages
     for( packageName in this.custom ) {
         if(this.custom.hasOwnProperty(packageName)) {
-            this._loadPackage(packageName, this.custom);
+            this._loadPackage(packageName, this.custom, Sjl.config.customPath);
         }
     }
 };
 
-Sjl._loadPackage = function(packageName, scope) {
+Sjl._loadPackage = function(packageName, scope, path) {
     scope = scope || this;
 
     if(!scope.hasOwnProperty(packageName)) {
@@ -55,18 +26,26 @@ Sjl._loadPackage = function(packageName, scope) {
 
     for( var scriptName in scope[packageName] ) {
         if(scope[packageName].hasOwnProperty(scriptName)) {
+            if(packageName === "config" || packageName === "custom") {
+                continue;
+            }
+
             if(packageName === "style") {
-                scope._loadStyle(packageName, scriptName, scope);
+                this._loadStyle(packageName, scriptName, scope);
             } else if (packageName === 'component') {
-                scope._loadComponent(packageName, scriptName, scope);
+                this._loadComponent(packageName, scriptName, scope);
             } else {
-                scope._loadScript(packageName, scriptName, scope);
+                this._loadScript(packageName, scriptName, scope, path);
             }
         }
     }
 };
 
 Sjl._loadStyle = function(packageName, styleName, scope) {
+    if(Sjl.config.loadStyles == false) {
+        return;
+    }
+
     if(!scope[packageName].hasOwnProperty(styleName)) {
         console.warn("style not found: "+styleName);
         return;
@@ -75,16 +54,25 @@ Sjl._loadStyle = function(packageName, styleName, scope) {
     Sjl._createLink("css/sjl/" + styleName + ".css");
 };
 
-Sjl._loadScript = function(packageName, scriptName, scope) {
+Sjl._loadScript = function(packageName, scriptName, scope, path) {
+    if(Sjl.config.loadScripts == false) {
+        return;
+    }
+
     if(!scope[packageName].hasOwnProperty(scriptName)) {
         console.warn("script not found: "+scriptName);
         return;
     }
 
-    Sjl._createScript("js/lib/" + packageName + "/" + scriptName + ".js");
+    path = path || "js/lib/";
+    Sjl._createScript(path + packageName + "/" + scriptName + ".js");
 };
 
 Sjl._loadComponent = function(packageName, scriptName, scope) {
+    if(Sjl.config.loadComponents == false) {
+        return;
+    }
+
     if(!scope[packageName].hasOwnProperty(scriptName)) {
         console.warn("component not found: "+scriptName);
         return;
@@ -112,5 +100,3 @@ Sjl._createLink = function(stylePath) {
     link.href = stylePath;
     document.head.appendChild(link);
 };
-
-Sjl.init();
