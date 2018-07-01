@@ -93,8 +93,21 @@ public class UserRemote implements IUserRemote {
     }
 
     @GET
+    @Path("/login")
+    @PreAuthorize("isUser()")
+    public Response login() {
+        User user = securityContextUserLocator.getSecurityContextUser();
+
+        if (user == null) {
+            return ResponseUtil.notAuthorized();
+        }
+
+        return ResponseUtil.ok(userDtoConverter.convertToDto(user));
+    }
+
+    @GET
     @Path("/{id}/games")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isUser() and hasPermission(#id, T(com.retronic.security.enums.Permission).IS_USER)")
     @DirtyReadTransactional
     public Response getGames(@PathParam("id") Integer id) {
         User user = securityContextUserLocator.getSecurityContextUser();

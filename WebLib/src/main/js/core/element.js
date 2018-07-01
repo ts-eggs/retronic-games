@@ -160,6 +160,10 @@ Sjl.core.element._addDomEvent = function(element, event, fn) {
         element.dom.onclick = function(e) {
             fn(element, e);
         }
+    } else if(event === 'change') {
+        element.dom.onkeyup = function(e) {
+            fn(element, e);
+        }
     }
 };
 
@@ -176,10 +180,7 @@ Sjl.core.element.createElement = function(config, isComponent) {
     if(isComponent === true) {
         element.componentId = element.id;
         element.componentType = element.type;
-    }
-
-    if(config.inputType) {
-        element.dom.type = config.inputType;
+        element.mainComponentId = element.mainComponentId || element.id;
     }
 
     if(config.style) {

@@ -7,5 +7,7 @@ import javax.ws.rs.core.Response;
 
 public interface IUserRemote extends IGenericRemote<UserDto, Integer> {
 
+    Response login();
+
     Response getGames(Integer id);
 }

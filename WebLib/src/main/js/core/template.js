@@ -1,7 +1,12 @@
 Sjl.core.template.init = function() {
     // map public functions
+    Sjl.applyCustom = Sjl.core.template.applyCustom;
     Sjl.applyConfig = Sjl.core.template.applyConfig;
     Sjl.generateTemplateConfig = Sjl.core.template.generateTemplateConfig;
+};
+
+Sjl.core.template.applyCustom = function(configBase, configApply) {
+    return Sjl.core.template.applyConfig(configBase, configApply);
 };
 
 Sjl.core.template.applyConfig = function(configBase, configApply) {

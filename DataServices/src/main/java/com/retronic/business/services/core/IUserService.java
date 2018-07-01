@@ -7,5 +7,7 @@ public interface IUserService extends IGenericService<User, Integer> {
 
     User getByLogin(String login);
 
+    void setTrialCounts(User user, boolean reset);
+
     void changePassword(final String password, final User user);
 }

@@ -6,8 +6,5 @@ Sjl.component.button._templates.default = {
     style: {
         width: "{{width}}",
         height: "{{height}}"
-    },
-    events: {
-        click: "clickButton"
     }
 };

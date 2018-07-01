@@ -1,3 +1,37 @@
+Sjl.applyCustom(Sjl.custom.login.window, {
+    clickLogin: function(element, event) {
+        var window = Sjl.getElement(element.mainComponentId);
+        var name = Sjl.findElementByName('input-name', window);
+        var password = Sjl.findElementByName('input-password', window);
+
+        if(!name || !name.value || !password || !password.value) {
+            console.error("no login values found.");
+            return;
+        }
+
+        var options = {
+            method: "GET",
+            resourcePath: "users/login",
+            callback: Sjl.custom.login.window.loginCallback,
+            authentication: {name: name.value, password: password.value},
+            mainComponentId: element.mainComponentId
+        };
+
+        Sjl.request(options);
+    },
+    clickRegister: function(element, event) {
+
+    },
+    loginCallback: function(response, options) {
+        if(response.status == 200) {
+            Sjl.setAuthentication(options.authentication);
+            Sjl.removeWindow(options.mainComponentId);
+        } else {
+            console.error("login failed.");
+        }
+    }
+});
+
 Sjl.component.window._templates.login = {
     type: "window", parent: "{{parent}}", style: {width: "{{width}}",height: "{{height}}"},
     items: [{
@@ -17,9 +51,9 @@ Sjl.component.window._templates.login = {
     }, {
         type: "container",name: "window-buttons",class: "window-buttons",layout: "horizontal",
         items: [{
-            type: "button",text: "Register", style: {float: "right"}
+            type: "button",text: "Register", style: {float: "right"}, callbacks: {click: 'Sjl.custom.login.window.clickRegister'}
         }, {
-            type: "button",text: "Login", style: {float: "right"}
+            type: "button",text: "Login", style: {float: "right"}, callbacks: {click: 'Sjl.custom.login.window.clickLogin'}
         }]
     }]
 };

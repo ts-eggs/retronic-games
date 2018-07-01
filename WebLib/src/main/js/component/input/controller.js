@@ -23,6 +23,10 @@ Sjl.component.input.create = function(config, scope) {
         value.dom.innerText = config.value;
     }
 
+    if(config.inputType && value) {
+        value.dom.type = config.inputType;
+    }
+
     return element;
 };
 

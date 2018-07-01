@@ -22,9 +22,9 @@ public class UserAuthenticator extends Authenticator {
         if (permission == Permission.IS_USER) {
             return id.equals(user.getId());
         } else if (permission == Permission.USER_READ) {
-            return user.hasAdminAccess();
+            return id.equals(user.getId()) || user.hasAdminAccess();
         } else if (permission == Permission.USER_WRITE) {
-            return user.hasSystemAccess();
+            return id.equals(user.getId()) || user.hasSystemAccess();
         }
 
         return false;

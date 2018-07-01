@@ -19,13 +19,14 @@ Sjl.core.container._setChildren = function(config, parent) {
         childConfig.parent = parent.id;
         childConfig.componentId = parent.componentId;
         childConfig.componentType = parent.componentType;
+        childConfig.mainComponentId = parent.mainComponentId;
 
         if(parent.layout === "horizontal") {
             childConfig.style = childConfig.style || {};
             childConfig.style.float = childConfig.style.float || 'left';
         }
 
-        Sjl.create(childConfig);
+        config.items[i] = Sjl.create(childConfig);
     }
 };
 
@@ -33,14 +34,13 @@ Sjl.core.container.create = function(config, isComponent) {
     var componentScope = Sjl.component[config.type];
 
     if(componentScope) {
-        componentScope.create(config);
-        return;
+        return componentScope.create(config);
     }
 
     if(config.type === "container") {
-        Sjl.createContainer(config, isComponent);
+        return Sjl.createContainer(config, isComponent);
     } else {
-        Sjl.createElement(config, isComponent);
+        return Sjl.createElement(config, isComponent);
     }
 };
 
@@ -52,6 +52,7 @@ Sjl.core.container.createElement = function(config, isComponent) {
         scope._setChildren(config, element);
     }
 
+    element.isContainer = true;
     element.findElementById = scope.findElementById;
     element.findElementByName = scope.findElementByName;
     return element;
@@ -66,8 +67,18 @@ Sjl.core.container.findElementById = function(id, container) {
     }
 
     for( var i = 0; i < container.items.length; i++ ) {
-        if(container.items[i].id == id) {
-            return container.items[i];
+        var item = container.items[i];
+
+        if(item.id == id) {
+            return item;
+        }
+
+        if(item.isContainer) {
+            var foundElement = item.findElementById(id);
+
+            if(foundElement != null) {
+                return foundElement;
+            }
         }
     }
 
@@ -83,8 +94,18 @@ Sjl.core.container.findElementByName = function(name, container) {
     }
 
     for( var i = 0; i < container.items.length; i++ ) {
-        if(container.items[i].name == name) {
-            return container.items[i];
+        var item = container.items[i];
+
+        if(item.name == name) {
+            return item;
+        }
+
+        if(item.isContainer) {
+            var foundElement = item.findElementByName(name);
+
+            if(foundElement != null) {
+                return foundElement;
+            }
         }
     }
 

@@ -21,6 +21,9 @@ Sjl.component.input._templates.default = {
         style: {
             width: "60%",
             "border-bottom": "1px solid"
+        },
+        events: {
+            change: "changeValue"
         }
     }]
 };

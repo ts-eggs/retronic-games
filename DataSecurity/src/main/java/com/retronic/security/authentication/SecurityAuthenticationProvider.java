@@ -26,11 +26,11 @@ public class SecurityAuthenticationProvider extends AbstractUserDetailsAuthentic
         User user = userService.getByLogin(name);
 
         if (!user.getPassword().equals(PasswordEncoder.encodePassword(pass, name))) {
-            setTrialCounts(user, false);
+            userService.setTrialCounts(user, false);
             throw new BadCredentialsException("The given password is wrong!");
         }
 
-        setTrialCounts(user, true);
+        userService.setTrialCounts(user, true);
     }
 
     @Override
@@ -46,15 +46,5 @@ public class SecurityAuthenticationProvider extends AbstractUserDetailsAuthentic
         }
 
         return new SecurityUserDetails(user);
-    }
-
-    private void setTrialCounts(User user, boolean reset) {
-        if (reset) {
-            user.resetTrialCount();
-        } else {
-            user.pushTrialCount();
-        }
-
-        userService.update(user);
     }
 }

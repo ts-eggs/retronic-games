@@ -16,6 +16,7 @@ var Sjl = {
         template: {},
         cookie: {},
         element: {},
+        remote: {},
         container: {}
     },
     component: {
@@ -26,6 +27,8 @@ var Sjl = {
         selection: {},
         window: {}
     },
-    model: {},
+    model: {
+        user: {}
+    },
     custom: {}
 };

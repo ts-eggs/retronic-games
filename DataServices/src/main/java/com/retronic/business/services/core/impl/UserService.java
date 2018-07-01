@@ -39,6 +39,17 @@ public class UserService extends GenericService<User, Integer> implements IUserS
     }
 
     @Override
+    public void setTrialCounts(User user, boolean reset) {
+        if (reset) {
+            user.resetTrialCount();
+        } else {
+            user.pushTrialCount();
+        }
+
+        this.update(user);
+    }
+
+    @Override
     public void changePassword(String password, User user) {
         userDao.changePassword(password, user);
     }

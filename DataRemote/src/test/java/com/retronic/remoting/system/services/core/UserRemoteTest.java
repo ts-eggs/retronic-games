@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -50,5 +51,12 @@ public class UserRemoteTest {
         Response response = userRemote.getGames(3);
         List<GameDto> dtos = (List<GameDto>) response.getEntity();
         assertTrue(dtos.size() > 0);
+    }
+
+    @Test
+    public void testLogin() throws Exception {
+        securityTestUtils.setUpAuthentication(3);
+        Response response = userRemote.login();
+        assertEquals(200, response.getStatus());
     }
 }
