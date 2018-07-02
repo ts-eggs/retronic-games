@@ -29,7 +29,7 @@ Sjl.core.remote.request = function(options) {
         request.setRequestHeader('Authorization', 'Basic ' + btoa(options.authentication.name + ':' + options.authentication.password))
     }
 
-    //TODO: add loading mask
+    options.loadingElement = Sjl.createMask(options.loadingText ? {title: options.loadingText} : {});
     request.send();
 };
 
@@ -56,7 +56,7 @@ Sjl.core.remote._requestReadyStateChange = function(request, options) {
             options.callback(response, options);
         }
 
-        //TODO: remove loading mask
+        Sjl.removeMask(options.loadingElement.id);
     }
 };
 

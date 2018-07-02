@@ -24,6 +24,7 @@ var Sjl = {
         button: {},
         input: {},
         list: {},
+        mask: {},
         selection: {},
         window: {}
     },
