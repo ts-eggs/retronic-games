@@ -1,11 +1,21 @@
-Sjl.core.cookie.init = function() {};
+Sjl.core.cookie.init = function() {
+    // map public functions
+    Sjl.setCookie = Sjl.core.cookie.setCookie;
+    Sjl.getCookie = Sjl.core.cookie.getCookie;
+    Sjl.eraseCookie = Sjl.core.cookie.eraseCookie;
+    var sessionToken = Sjl.getCookie("sessionToken");
 
-Sjl.core.cookie.setCookie = function(name, value, expireDays, path) {
+    if(Sjl.applySession.constructor == Function && sessionToken && sessionToken.length > 0) {
+        Sjl.applySession(sessionToken);
+    }
+};
+
+Sjl.core.cookie.setCookie = function(name, value, expireHours, path) {
     var cookieValue = name + "=" + value;
 
-    if(expireDays) {
+    if(expireHours) {
         var d = new Date();
-        d.setTime(d.getTime() + (expireDays * 24 * 60 * 60 * 1000));
+        d.setTime(d.getTime() + (expireHours * 60 * 60 * 1000));
         var expires = "expires="+d.toUTCString();
         cookieValue += ";" + expires;
     }
@@ -34,6 +44,10 @@ Sjl.core.cookie.getCookie = function(name) {
     }
 
     return "";
+};
+
+Sjl.core.cookie.eraseCookie = function(name) {
+    document.cookie = name+'=; Max-Age=-99999999;';
 };
 
 Sjl.core.cookie.init();

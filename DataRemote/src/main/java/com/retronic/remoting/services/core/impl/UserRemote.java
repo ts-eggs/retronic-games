@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -102,6 +103,8 @@ public class UserRemote implements IUserRemote {
             return ResponseUtil.notAuthorized();
         }
 
+        user.setLastlogin(Calendar.getInstance());
+        userService.update(user);
         return ResponseUtil.ok(userDtoConverter.convertToDto(user));
     }
 

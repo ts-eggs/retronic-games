@@ -1,13 +1,6 @@
-Sjl.userAuthentication = null;
-
 Sjl.core.remote.init = function() {
     // map public functions
     Sjl.request = Sjl.core.remote.request;
-    Sjl.setAuthentication = Sjl.core.remote.setAuthentication;
-};
-
-Sjl.core.remote.setAuthentication = function(authentication) {
-    Sjl.userAuthentication = authentication;
 };
 
 Sjl.core.remote.request = function(options) {
@@ -17,16 +10,20 @@ Sjl.core.remote.request = function(options) {
     }
 
     options.method = options.method || "GET";
-    options.authentication = options.authentication || Sjl.userAuthentication;
-
+    var token = Sjl.getCookie("sessionToken");
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() { Sjl.core.remote._requestReadyStateChange(this, options); };
     request.open(options.method, Sjl.config.remotePath + options.resourcePath, true);
     request.setRequestHeader("Content-type", "application/json");
 
-    if(options.authentication) {
+    if(!token && options.authentication) {
+        token = btoa(options.authentication.name + ':' + options.authentication.password);
+    }
+
+    if(token) {
+        options.sessionToken = token;
         request.withCredentials = true;
-        request.setRequestHeader('Authorization', 'Basic ' + btoa(options.authentication.name + ':' + options.authentication.password))
+        request.setRequestHeader('Authorization', 'Basic ' + token);
     }
 
     options.loadingElement = Sjl.createMask(options.loadingText ? {title: options.loadingText} : {});

@@ -16,8 +16,14 @@ function login() {
 }
 
 function logout() {
-    Sjl.setAuthentication(null);
+    Sjl.eraseCookie("sessionToken");
     document.getElementById('header-logout').style.display = "none";
     document.getElementById('header-login').style.display = "block";
     document.getElementById('header-login-name').innerText = "";
+}
+
+function welcome(name) {
+    document.getElementById('header-login').style.display = "none";
+    document.getElementById('header-logout').style.display = "block";
+    document.getElementById('header-login-name').innerText = "Hello " + name;
 }
