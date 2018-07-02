@@ -6,6 +6,22 @@ Sjl.core.template.init = function() {
 };
 
 Sjl.core.template.applyCustom = function(configBase, configApply) {
+    if(!configApply.extendScope) {
+        console.error("cannot create custom, because no extend scope is defined.");
+        return;
+    }
+
+    if(!configApply.templateConfig) {
+        console.error("cannot create custom, because no template-config is defined.");
+        return;
+    }
+
+    if(!configApply.templateName) {
+        console.error("cannot create custom, because no template-name is defined.");
+        return;
+    }
+
+    configApply.extendScope._templates[configApply.templateName] = configApply.templateConfig;
     return Sjl.core.template.applyConfig(configBase, configApply);
 };
 

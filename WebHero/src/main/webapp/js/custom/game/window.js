@@ -1,8 +1,4 @@
-Sjl.custom.game.window.clickCancel = function(element, event) {
-    // do some stuff
-};
-
-Sjl.component.window._templates.game = {
+var templateConfig = {
     type: "window", parent: "{{parent}}", style: {width: "{{width}}",height: "{{height}}"},
     items: [{
         type: "container",name: "window-header",class: "window-header",layout: "horizontal",
@@ -29,3 +25,13 @@ Sjl.component.window._templates.game = {
         }]
     }]
 };
+
+Sjl.applyCustom(Sjl.custom.game.window, {
+    extendScope: Sjl.component.window,
+    templateConfig: templateConfig,
+    templateName: "game",
+
+    clickCancel: function(element, event) {
+        // do some stuff
+    }
+});
