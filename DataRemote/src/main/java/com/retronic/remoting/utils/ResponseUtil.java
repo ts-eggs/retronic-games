@@ -1,5 +1,12 @@
 package com.retronic.remoting.utils;
 
+import com.google.gson.JsonArray;
+import com.retronic.remoting.error.Error;
+import com.retronic.remoting.error.ErrorMessage;
+import com.retronic.remoting.error.IError;
+import com.retronic.remoting.validation.IValidationFailure;
+import com.retronic.remoting.validation.ValidationResult;
+
 import javax.ws.rs.core.Response;
 
 public class ResponseUtil {
@@ -44,6 +51,21 @@ public class ResponseUtil {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    public static Response badRequest(IError error) {
+        return badRequest(error, null, null);
+    }
+
+    public static Response badRequest(IError error, String additionalInfo) {
+        return badRequest(error, additionalInfo, null);
+    }
+
+    public static Response badRequest(IError error, String additionalInfo, Object additionalJson) {
+        ErrorMessage message = new ErrorMessage(error.name(), error.getMessage(), error.getTranslationPath());
+        message.setAdditionalInfo(additionalInfo);
+        message.setAdditionalJson(additionalJson);
+        return Response.status(Response.Status.BAD_REQUEST).entity(message).build();
+    }
+
     public static Response notFound(String message) {
         return Response.status(Response.Status.NOT_FOUND).entity(message).build();
     }
@@ -74,5 +96,19 @@ public class ResponseUtil {
 
     public static Response notFound() {
         return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    public static Response validationError(IError error) {
+        return ResponseUtil.badRequest(error, null, null);
+    }
+
+    public static Response validationError(ValidationResult validationResult) {
+        JsonArray jsonArray = new JsonArray();
+
+        for (int i = 0; i < validationResult.getValidationFailures().size(); i++) {
+            IValidationFailure validationFailure = validationResult.getValidationFailures().get(i);
+            jsonArray.add(validationFailure.getFailure());
+        }
+        return ResponseUtil.badRequest(Error.VALIDATION_ERROR, null, jsonArray.toString());
     }
 }

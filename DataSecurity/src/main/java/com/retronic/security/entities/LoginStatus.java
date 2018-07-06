@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class LoginStatus implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2405172041950251829L;
 
     private final boolean success;
     private final boolean loggedIn;
