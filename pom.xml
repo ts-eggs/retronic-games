@@ -16,6 +16,7 @@
         <module>DataRemote</module>
         <module>WebRest</module>
         <module>WebLibSjl</module>
+        <module>WebLibScl</module>
         <module>WebHero</module>
     </modules>
 

@@ -7,8 +7,12 @@ DataRemote/target/
 DataSecurity/target/
 DataServices/target/
 WebHero/target/
-WebLibJsl/target/
-WebLibJsl/build/
-WebLibJsl/node_modules/
-WebLibJsl/package-lock.json
 WebRest/target/
+WebLibSjl/target/
+WebLibSjl/build/
+WebLibSjl/node_modules/
+WebLibSjl/package-lock.json
+WebLibScl/target/
+WebLibScl/build/
+WebLibScl/node_modules/
+WebLibScl/package-lock.json

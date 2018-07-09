@@ -1,19 +1,18 @@
-Sjl.config.customPath = "js/custom/";
-Sjl.config.remotePath = window.location.origin + "/rest/";
+SclConfig.libPath = "js/lib/";
+SclConfig.customPath = "js/custom/";
+SclConfig.remotePath = window.location.origin + "/rest/";
 
-Sjl.afterLogin = function(response, options) {
-    welcome(options.authentication.name);
-};
-
-Sjl.applySession = function(token) {
-    var auth = window.atob(token);
-    welcome(auth.substring(0, auth.indexOf(":")));
-};
-
-Sjl.custom = {
+Scl.custom = {
     game: {
         window: {}
     }
 };
 
-Sjl.init();
+Scl.applySession = function(token) {
+    var auth = window.atob(token);
+    welcome(auth.substring(0, auth.indexOf(":")));
+};
+
+Scl.initialized = function(response, options) {
+
+};

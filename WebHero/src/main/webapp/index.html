@@ -16,15 +16,7 @@
 
     <title>Hero Game</title>
 </head>
-<body>
-    <div id="header" class="header">
-        <div id="header-title" class="header-title">Hero</div>
-        <div id="header-logout" class="header-button" style="display: none;" onclick="logout()">Logout</div>
-        <div id="header-login" class="header-button" onclick="login()">Login</div>
-        <div id="header-login-name" class="header-text"></div>
-    </div>
-    <div id="content" class="content">
-        <sjl type="tree" />
-    </div>
+<body onload="Scl.init();">
+    <scl-header></scl-header>
 </body>
 </html>
