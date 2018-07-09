@@ -15,7 +15,7 @@
         <module>DataServices</module>
         <module>DataRemote</module>
         <module>WebRest</module>
-        <module>WebLib</module>
+        <module>WebLibSjl</module>
         <module>WebHero</module>
     </modules>
 

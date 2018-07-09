@@ -27,7 +27,7 @@ var templateConfig = {
 };
 
 Sjl.applyCustom(Sjl.custom.game.window, {
-    extendScope: Sjl.component.window,
+    extendComponent: Sjl.component.window,
     templateConfig: templateConfig,
     templateName: "game",
 

@@ -15,6 +15,25 @@
         </sourceRoots>
       </configuration>
     </facet>
+    <facet type="Spring" name="Spring">
+      <configuration>
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/java/com/retronic/rest/config/RemotingWebConfig.java</file>
+          <file>file://$MODULE_DIR$/../DataSecurity/src/main/resources/authenticationServices.xml</file>
+          <file>file://$MODULE_DIR$/../DataSecurity/src/main/resources/remoteSecurityServices.xml</file>
+          <file>file://$MODULE_DIR$/../DataSecurity/src/main/resources/securityHandler.xml</file>
+          <file>file://$MODULE_DIR$/../DataServices/src/main/resources/springServices.xml</file>
+          <file>file://$MODULE_DIR$/../DataRemote/src/main/resources/spring-rest.xml</file>
+          <file>file://$MODULE_DIR$/../DataAccess/src/main/resources/spring-ds.xml</file>
+          <file>file://$MODULE_DIR$/../DataAccess/src/main/resources/spring.xml</file>
+          <file>file://$MODULE_DIR$/../DataAccess/src/main/java/com/retronic/persistence/config/DatasourceConfig.java</file>
+          <file>file://$MODULE_DIR$/../DataAccess/src/main/java/com/retronic/persistence/config/EnvironmentConfig.java</file>
+          <file>file://$MODULE_DIR$/../DataAccess/src/main/java/com/retronic/persistence/config/ServerConfig.java</file>
+          <file>jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring4/2.27/jersey-spring4-2.27.jar!/jersey-spring-applicationContext.xml</file>
+          <file>file://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-spring4/2.27/jersey-spring4-2.27.jar</file>
+        </fileset>
+      </configuration>
+    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />

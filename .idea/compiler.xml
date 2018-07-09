@@ -84,6 +84,13 @@
         <processorPath useClasspath="true" />
         <module name="WebLib" />
       </profile>
+      <profile default="false" name="Annotation profile for WebLibSjl" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="WebLibSjl" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="_root" target="1.8" />
@@ -96,6 +103,7 @@
       <module name="retronic-games" target="1.8" />
       <module name="WebHero" target="1.8" />
       <module name="WebLib" target="1.8" />
+      <module name="WebLibSjl" target="1.8" />
       <module name="WebPortal" target="1.8" />
       <module name="WebRest" target="1.8" />
     </bytecodeTargetLevel>

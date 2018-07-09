@@ -6,7 +6,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/DataRemote" />
     <file type="web" url="file://$PROJECT_DIR$/WebHero" />
-    <file type="web" url="file://$PROJECT_DIR$/WebLib" />
+    <file type="web" url="file://$PROJECT_DIR$/WebLibSjl" />
     <file type="web" url="file://$PROJECT_DIR$/WebPortal" />
     <file type="web" url="file://$PROJECT_DIR$/WebRest" />
   </component>

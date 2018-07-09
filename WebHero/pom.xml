@@ -32,11 +32,11 @@
                         <configuration>
                             <webResources>
                                 <resource>
-                                    <directory>${basedir}/../WebLib/src/main/js</directory>
+                                    <directory>${basedir}/../WebLibSjl/src/main/js</directory>
                                     <targetPath>js/lib</targetPath>
                                 </resource>
                                 <resource>
-                                    <directory>${basedir}/../WebLib/src/main/resources</directory>
+                                    <directory>${basedir}/../WebLibSjl/src/main/resources</directory>
                                     <targetPath>.</targetPath>
                                 </resource>
                             </webResources>
@@ -55,7 +55,7 @@
                         <configuration>
                             <webResources>
                                 <resource>
-                                    <directory>${basedir}/../WebLib/build</directory>
+                                    <directory>${basedir}/../WebLibSjl/build</directory>
                                     <targetPath>js/lib</targetPath>
                                     <includes>
                                         <include>bootstrap.js</include>
@@ -64,7 +64,7 @@
                                     </includes>
                                 </resource>
                                 <resource>
-                                    <directory>${basedir}/../WebLib/src/main/resources</directory>
+                                    <directory>${basedir}/../WebLibSjl/src/main/resources</directory>
                                     <targetPath>.</targetPath>
                                 </resource>
                             </webResources>
