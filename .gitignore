@@ -1,0 +1,14 @@
+.idea/
+target/
+*.sass-cache
+*.iml
+DataAccess/target/
+DataRemote/target/
+DataSecurity/target/
+DataServices/target/
+WebHero/target/
+WebLibJsl/target/
+WebLibJsl/build/
+WebLibJsl/node_modules/
+WebLibJsl/package-lock.json
+WebRest/target/

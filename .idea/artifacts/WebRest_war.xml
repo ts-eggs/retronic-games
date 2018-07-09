@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="WebRest:war">
-    <output-path>$PROJECT_DIR$/WebRest/target</output-path>
-    <root id="archive" name="rest.war">
-      <element id="artifact" artifact-name="WebRest:war exploded" />
-    </root>
-  </artifact>
-</component>
