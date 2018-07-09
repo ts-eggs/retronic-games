@@ -9,10 +9,12 @@
 var Scl = {
     core: {
         cookie: {},
-        remote: {}
+        remote: {},
+        component: {}
     },
     component: {
-        header: {}
+        header: {},
+        window: {}
     }
 };
 
@@ -28,10 +30,9 @@ Scl.init = function() {
         return;
     }
 
-    var packageName;
+    for( var i = 0; i < Scl._knownPackages.length; i++ ) {
+        var packageName = Scl._knownPackages[i];
 
-    // load library packages
-    for( packageName in this ) {
         if(this.hasOwnProperty(packageName)) {
             this._loadPackage(packageName);
         }

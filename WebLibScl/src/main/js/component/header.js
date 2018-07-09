@@ -3,6 +3,7 @@ customElements.define('scl-header', class extends HTMLElement {
     constructor() {
         super();
         const shadowRoot = this.attachShadow({mode: 'open'});
+
         shadowRoot.innerHTML = `
             <style>
                 #header {
@@ -48,25 +49,38 @@ customElements.define('scl-header', class extends HTMLElement {
 
             <div id="header">
                 <div id="header-title">Hero</div>
-                <div id="header-logout" class="header-button" style="display: none;" onclick="logout()">Logout</div>
-                <div id="header-login" class="header-button" onclick="login()">Login</div>
+                <div id="header-logout" class="header-button" style="display: none;">Logout</div>
+                <div id="header-login" class="header-button">Login</div>
                 <div id="header-welcome"></div>
             </div>
         `;
     }
 
     connectedCallback() {
+        var me = this;
+        setTimeout(function() {Scl.addComponent(me);}, 500);
         const loginButton = this.shadowRoot.querySelector('#header-login');
-        this._boundOnLoginClick = this._onLoginClick.bind(this);
-        loginButton.addEventListener('click', this._boundOnLoginClick);
+        const logoutButton = this.shadowRoot.querySelector('#header-logout');
+        loginButton.addEventListener('click', this._onLoginClick.bind(this));
+        logoutButton.addEventListener('click', this._onLogoutClick.bind(this));
     }
 
     disconnectedCallback() {
         const loginButton = this.shadowRoot.querySelector('#header-login');
-        loginButton.removeEventListener('click', this._boundOnLoginClick);
+        const logoutButton = this.shadowRoot.querySelector('#header-logout');
+        loginButton.removeEventListener('click', this._onLoginClick.bind(this));
+        logoutButton.removeEventListener('click', this._onLogoutClick.bind(this));
     }
 
     _onLoginClick(e) {
-        // open login window
+        Scl.createComponent("scl-window");
+    }
+
+    _onLogoutClick(e) {
+        const loginButton = this.shadowRoot.querySelector('#header-login');
+        const logoutButton = this.shadowRoot.querySelector('#header-logout');
+        loginButton.style.display = "block";
+        logoutButton.style.display = "none";
+        Scl.eraseCookie("sessionToken");
     }
 });
