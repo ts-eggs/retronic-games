@@ -1,12 +1,16 @@
 Sjl.core.remote.init = function() {
-    Sjl.core.element._scopeName = "core.remote";
-
-    // map public functions
-    Sjl.request = Sjl.core.remote.request;
+    Sjl.core.remote._scopeName = "core.remote";
 };
 
-Sjl.core.remote.request = function(options) {
-    if(!options || !options.resourcePath) {
+/**
+ * @param options
+ *  method: Request method
+ *  resource: Url path of the resource
+ *  callback: callback function which is called after response
+ *  authentication: object for basic authentication {name: "", password: ""}
+ */
+Sjl.request = function(options) {
+    if(!options || !options.resource) {
         console.warn("no options defined for request.");
         return;
     }
@@ -15,7 +19,7 @@ Sjl.core.remote.request = function(options) {
     var token = Sjl.getCookie("sessionToken");
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() { Sjl.core.remote._requestReadyStateChange(this, options); };
-    request.open(options.method, Sjl.config.remotePath + options.resourcePath, true);
+    request.open(options.method, SjlConfig.remotePath + options.resource, true);
     request.setRequestHeader("Content-type", "application/json");
 
     if(!token && options.authentication) {

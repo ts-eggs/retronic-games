@@ -1,3 +1,5 @@
+Sjl.component.input._templates = {};
+
 Sjl.component.input._templates.default = {
     type: "input",
     parent: "{{parent}}",

@@ -2,38 +2,6 @@ Sjl.core.element._elements = {};
 
 Sjl.core.element.init = function() {
     Sjl.core.element._scopeName = "core.element";
-
-    // map public functions
-    Sjl.createElement = Sjl.core.element.createElement;
-    Sjl.removeElement = Sjl.core.element.removeElement;
-    Sjl.getElement = Sjl.core.element.getElement;
-    Sjl.showElement = Sjl.core.element.showElement;
-    Sjl.hideElement = Sjl.core.element.hideElement;
-};
-
-Sjl.core.element._getNextElementId = function() {
-    var scope = Sjl.core.element;
-    var id = 1;
-
-    for(var key in scope._elements) {
-        if(scope._elements.hasOwnProperty(key)) {
-            id = id < parseInt(key) ? parseInt(key) : id;
-        }
-    }
-
-    return id+1;
-};
-
-Sjl.core.element._hasElementId = function(id) {
-    var scope = Sjl.core.element;
-
-    for(var key in scope._elements) {
-        if(id == key) {
-            return true;
-        }
-    }
-
-    return false;
 };
 
 Sjl.core.element._addElement = function(element) {
@@ -71,6 +39,31 @@ Sjl.core.element._removeElementsWithParentId = function (parentId)  {
     }
 };
 
+Sjl.core.element._getNextElementId = function() {
+    var scope = Sjl.core.element;
+    var id = 1;
+
+    for(var key in scope._elements) {
+        if(scope._elements.hasOwnProperty(key)) {
+            id = id < parseInt(key) ? parseInt(key) : id;
+        }
+    }
+
+    return id+1;
+};
+
+Sjl.core.element._hasElementId = function(id) {
+    var scope = Sjl.core.element;
+
+    for(var key in scope._elements) {
+        if(id == key) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
 Sjl.core.element._optimizeConfig = function (config)  {
     var scope = Sjl.core.element;
     config = config || {};
@@ -91,6 +84,7 @@ Sjl.core.element._optimizeConfig = function (config)  {
     }
 
     config.domType = config.domType || "div";
+    config.layout = config.layout || "vertical";
 };
 
 Sjl.core.element._setStyling = function(config, element) {
@@ -169,7 +163,34 @@ Sjl.core.element._addDomEvent = function(element, event, fn) {
     }
 };
 
-Sjl.core.element.createElement = function(config, isComponent) {
+Sjl.core.element._setChildren = function(config, parent) {
+    for(var i = 0; i < config.items.length; i++) {
+        var childConfig = config.items[i];
+        childConfig.parent = parent.id;
+        childConfig.componentId = parent.componentId;
+        childConfig.componentType = parent.componentType;
+        childConfig.mainComponentId = parent.mainComponentId;
+
+        if(parent.layout === "horizontal") {
+            childConfig.style = childConfig.style || {};
+            childConfig.style.float = childConfig.style.float || 'left';
+        }
+
+        config.items[i] = Sjl.create(childConfig);
+    }
+};
+
+Sjl.create = function(config, isComponent) {
+    var componentScope = Sjl.component[config.type];
+
+    if(componentScope) {
+        return componentScope.create(config);
+    }
+
+    return Sjl.createElement(config, isComponent);
+};
+
+Sjl.createElement = function(config, isComponent) {
     var componentScope = Sjl.component.hasOwnProperty(config.componentType) ? Sjl.component[config.componentType] : Sjl.component[config.type];
     var scope = Sjl.core.element;
     scope._optimizeConfig(config);
@@ -186,9 +207,9 @@ Sjl.core.element.createElement = function(config, isComponent) {
     }
 
     if(config.style) {
-       scope._setStyling(config, element);
+        scope._setStyling(config, element);
     }
-    
+
     if(config.text) {
         element.dom.innerText = config.text;
     }
@@ -196,7 +217,7 @@ Sjl.core.element.createElement = function(config, isComponent) {
     scope._addElement(element);
 
     if(config.parent) {
-        var parentElement = scope._hasElementId(config.parent) ? scope.getElement(config.parent) : null;
+        var parentElement = scope._hasElementId(config.parent) ? Sjl.getElement(config.parent) : null;
         var parentElementDom = parentElement ? parentElement.dom : null;
         var parentDom = config.parent === 'body' ? top.document.body : parentElementDom;
 
@@ -209,11 +230,17 @@ Sjl.core.element.createElement = function(config, isComponent) {
         scope._addDomEvents(config.events, config.callbacks, element, scope, componentScope);
     }
 
-    // console.info("created element: "+element.type+" id: "+element.id);
+    if(config.items && config.items.length > 0) {
+        element.isContainer = true;
+        element.findElementById = Sjl.findElementById;
+        element.findElementByName = Sjl.findElementByName;
+        scope._setChildren(config, element);
+    }
+
     return element;
 };
 
-Sjl.core.element.getElement = function(id) {
+Sjl.getElement = function(id) {
     var scope = Sjl.core.element;
 
     if(!scope._elements.hasOwnProperty(id)) {
@@ -224,9 +251,9 @@ Sjl.core.element.getElement = function(id) {
     return scope._elements[id];
 };
 
-Sjl.core.element.removeElement = function(id) {
+Sjl.removeElement = function(id) {
     var scope = Sjl.core.element;
-    var element = scope.getElement(id);
+    var element = Sjl.getElement(id);
 
     if(element == null) {
         console.warn('element not found for remove: '+id);
@@ -241,9 +268,8 @@ Sjl.core.element.removeElement = function(id) {
     scope._removeElement(element);
 };
 
-Sjl.core.element.showElement = function(id) {
-    var scope = Sjl.core.element;
-    var element = scope.getElement(id);
+Sjl.showElement = function(id) {
+    var element = Sjl.getElement(id);
 
     if(element == null) {
         console.warn('element not found to show: '+id);
@@ -253,9 +279,8 @@ Sjl.core.element.showElement = function(id) {
     element.dom.style.display = "block";
 };
 
-Sjl.core.element.hideElement = function(id) {
-    var scope = Sjl.core.element;
-    var element = scope.getElement(id);
+Sjl.hideElement = function(id) {
+    var element = Sjl.getElement(id);
 
     if(element == null) {
         console.warn('element not found to hide: '+id);
@@ -263,6 +288,70 @@ Sjl.core.element.hideElement = function(id) {
     }
 
     element.dom.style.display = "none";
+};
+
+Sjl.findElementById = function(id, element) {
+    element = element || this;
+
+    if(!element.isContainer) {
+        console.warn("cannot find items, because element is no container: "+element.id);
+        return null;
+    }
+
+    if(!element.hasOwnProperty('items')) {
+        console.warn("cannot find items, because element has not property items: "+element.id);
+        return null;
+    }
+
+    for( var i = 0; i < element.items.length; i++ ) {
+        var item = element.items[i];
+
+        if(item.id == id) {
+            return item;
+        }
+
+        if(item.isContainer) {
+            var foundElement = item.findElementById(id);
+
+            if(foundElement != null) {
+                return foundElement;
+            }
+        }
+    }
+
+    return null;
+};
+
+Sjl.findElementByName = function(name, element) {
+    element = element || this;
+
+    if(!element.isContainer) {
+        console.warn("cannot find items, because element is no container: "+element.id);
+        return null;
+    }
+
+    if(!element.hasOwnProperty('items')) {
+        console.warn("cannot find items, because element has not property items: "+element.id);
+        return null;
+    }
+
+    for( var i = 0; i < element.items.length; i++ ) {
+        var item = element.items[i];
+
+        if(item.name == name) {
+            return item;
+        }
+
+        if(item.isContainer) {
+            var foundElement = item.findElementByName(name);
+
+            if(foundElement != null) {
+                return foundElement;
+            }
+        }
+    }
+
+    return null;
 };
 
 Sjl.core.element.init();

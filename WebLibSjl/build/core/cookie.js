@@ -1,18 +1,8 @@
 Sjl.core.cookie.init = function() {
-    Sjl.core.element._scopeName = "core.cookie";
-
-    // map public functions
-    Sjl.setCookie = Sjl.core.cookie.setCookie;
-    Sjl.getCookie = Sjl.core.cookie.getCookie;
-    Sjl.eraseCookie = Sjl.core.cookie.eraseCookie;
-    var sessionToken = Sjl.getCookie("sessionToken");
-
-    if(Sjl.applySession.constructor == Function && sessionToken && sessionToken.length > 0) {
-        Sjl.applySession(sessionToken);
-    }
+    Sjl.core.cookie._scopeName = "core.cookie";
 };
 
-Sjl.core.cookie.setCookie = function(name, value, expireHours, path) {
+Sjl.setCookie = function(name, value, expireHours, path) {
     var cookieValue = name + "=" + value;
 
     if(expireHours) {
@@ -29,7 +19,7 @@ Sjl.core.cookie.setCookie = function(name, value, expireHours, path) {
     document.cookie = cookieValue;
 };
 
-Sjl.core.cookie.getCookie = function(name) {
+Sjl.getCookie = function(name) {
     var ca = document.cookie.split(';');
     name = name + "=";
 
@@ -48,7 +38,7 @@ Sjl.core.cookie.getCookie = function(name) {
     return "";
 };
 
-Sjl.core.cookie.eraseCookie = function(name) {
+Sjl.eraseCookie = function(name) {
     document.cookie = name+'=; Max-Age=-99999999;';
 };
 

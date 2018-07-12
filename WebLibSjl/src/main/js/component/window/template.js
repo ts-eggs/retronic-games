@@ -1,3 +1,5 @@
+Sjl.component.window._templates = {};
+
 Sjl.component.window._templates.default = {
     type: "window",
     parent: "{{parent}}",
@@ -6,7 +8,6 @@ Sjl.component.window._templates.default = {
         height: "{{height}}"
     },
     items: [{
-        type: "container",
         name: "window-header",
         class: "window-header",
         layout: "horizontal",
@@ -25,11 +26,9 @@ Sjl.component.window._templates.default = {
             }
         }]
     }, {
-        type: "container",
         name: "window-content",
         class: "window-content"
     }, {
-        type: "container",
         name: "window-buttons",
         class: "window-buttons",
         layout: "horizontal"
@@ -45,7 +44,6 @@ Sjl.component.window._templates.login = {
         height: "{{height}}"
     },
     items: [{
-        type: "container",
         name: "window-header",
         class: "window-header",
         layout: "horizontal",
@@ -64,7 +62,6 @@ Sjl.component.window._templates.login = {
             }
         }]
     }, {
-        type: "container",
         name: "window-content",
         class: "window-content",
         items: [{
@@ -78,7 +75,6 @@ Sjl.component.window._templates.login = {
             inputType: "password"
         }]
     }, {
-        type: "container",
         name: "window-buttons",
         class: "window-buttons",
         layout: "horizontal",

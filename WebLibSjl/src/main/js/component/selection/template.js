@@ -1,3 +1,5 @@
+Sjl.component.selection._templates = {};
+
 Sjl.component.selection._templates.default = {
     type: "selection",
     parent: "{{parent}}",

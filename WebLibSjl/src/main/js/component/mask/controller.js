@@ -1,6 +1,4 @@
-Sjl.component.mask._eventFunctions = {};
 Sjl.component.mask._masks = {};
-Sjl.component.mask._templates = {};
 
 Sjl.component.mask.init = function() {
     Sjl.core.element._scopeName = "component.mask";

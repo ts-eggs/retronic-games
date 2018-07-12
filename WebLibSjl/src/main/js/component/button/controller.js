@@ -1,6 +1,3 @@
-Sjl.component.button._eventFunctions = {};
-Sjl.component.button._templates = {};
-
 Sjl.component.button.init = function() {
     Sjl.core.element._scopeName = "component.button";
     Sjl.applyConfig(Sjl.component.button, Sjl.component.base);

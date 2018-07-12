@@ -1,3 +1,5 @@
+Sjl.component.button._templates = {};
+
 Sjl.component.button._templates.default = {
     type: "button",
     parent: "{{parent}}",

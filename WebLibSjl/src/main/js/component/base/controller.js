@@ -14,7 +14,7 @@ Sjl.component.base._optimizeConfig = function (config)  {
 Sjl.component.base.create = function(config, scope) {
     scope = scope || Sjl.component.base;
     scope._optimizeConfig(config);
-    var element = Sjl.createContainer(Sjl.generateTemplateConfig(scope, config), true);
+    var element = Sjl.createElement(Sjl.generateTemplateConfig(scope, config), true);
 
     if(config.hidden != true) {
         Sjl.showElement(element.id);

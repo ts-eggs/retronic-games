@@ -1,6 +1,3 @@
-Sjl.component.list._eventFunctions = {};
-Sjl.component.list._templates = {};
-
 Sjl.component.list.init = function() {
     Sjl.core.element._scopeName = "component.list";
     Sjl.applyConfig(Sjl.component.list, Sjl.component.base);

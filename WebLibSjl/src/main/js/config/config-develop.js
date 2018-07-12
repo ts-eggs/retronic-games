@@ -1,8 +1,9 @@
-Sjl.config.loadStyles = true;
-Sjl.config.loadScripts = true;
-Sjl.config.loadComponents = true;
-Sjl.config.loadModels = true;
-Sjl.config.loadCustom = true;
-
-Sjl.config.customPath = "js/";
-Sjl.config.remotePath = "/";
+var SjlConfig = {
+    loadStyles: true,
+    loadScripts: true,
+    loadComponents: true,
+    libPath: "lib/",
+    customPath: "custom/",
+    stylePath: "css/",
+    remotePath: "/"
+};

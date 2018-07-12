@@ -32,11 +32,11 @@
                         <configuration>
                             <webResources>
                                 <resource>
-                                    <directory>${basedir}/../WebLibScl/src/main/js</directory>
+                                    <directory>${basedir}/../WebLibSjl/src/main/js</directory>
                                     <targetPath>js/lib</targetPath>
                                 </resource>
                                 <resource>
-                                    <directory>${basedir}/../WebLibScl/src/main/resources</directory>
+                                    <directory>${basedir}/../WebLibSjl/src/main/resources</directory>
                                     <targetPath>.</targetPath>
                                 </resource>
                             </webResources>
@@ -55,16 +55,16 @@
                         <configuration>
                             <webResources>
                                 <resource>
-                                    <directory>${basedir}/../WebLibScl/build</directory>
+                                    <directory>${basedir}/../WebLibSjl/build</directory>
                                     <targetPath>js/lib</targetPath>
                                     <includes>
                                         <include>bootstrap.js</include>
-                                        <include>scl.js</include>
-                                        <include>scl-debug.js</include>
+                                        <include>sjl.js</include>
+                                        <include>sjl-debug.js</include>
                                     </includes>
                                 </resource>
                                 <resource>
-                                    <directory>${basedir}/../WebLibScl/src/main/resources</directory>
+                                    <directory>${basedir}/../WebLibSjl/src/main/resources</directory>
                                     <targetPath>.</targetPath>
                                 </resource>
                             </webResources>

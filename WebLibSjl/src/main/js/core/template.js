@@ -1,13 +1,8 @@
 Sjl.core.template.init = function() {
     Sjl.core.element._scopeName = "core.template";
-
-    // map public functions
-    Sjl.applyCustom = Sjl.core.template.applyCustom;
-    Sjl.applyConfig = Sjl.core.template.applyConfig;
-    Sjl.generateTemplateConfig = Sjl.core.template.generateTemplateConfig;
 };
 
-Sjl.core.template.applyCustom = function(configBase, configApply) {
+Sjl.applyCustom = function(configBase, configApply) {
     if(!configApply.templateConfig) {
         console.error("cannot create custom, because no template-config is defined.");
         return;
@@ -22,17 +17,16 @@ Sjl.core.template.applyCustom = function(configBase, configApply) {
         configApply.extendComponent._templates[configApply.templateName] = configApply.templateConfig;
     }
 
-    return Sjl.core.template.applyConfig(configBase, configApply);
+    return Sjl.applyConfig(configBase, configApply);
 };
 
-Sjl.core.template.applyConfig = function(configBase, configApply) {
-    var scope = Sjl.core.template;
-
-    if(!configApply || !configBase) {
+Sjl.applyConfig = function(configBase, configApply) {
+    if(!configBase || !configApply) {
+        console.error("cannot apply config, because some config is not defined, base: "+configBase+" - apply: "+configApply);
         return;
     }
 
-    if(configApply.constructor !== configBase.constructor) {
+    if(configBase.constructor !== configApply.constructor) {
         console.error("cannot apply config, because both configs are not of the same type: "+configBase.constructor.name+" - "+configApply.constructor.name);
         return;
     }
@@ -40,7 +34,7 @@ Sjl.core.template.applyConfig = function(configBase, configApply) {
     if(configApply.constructor === Array) {
         for( var i = 0; i < configApply.length; i++ ) {
             if(configBase.indexOf(configApply[i]) == -1) {
-                configBase.push(scope.applyConfig({}, configApply[i]));
+                configBase.push(Sjl.applyConfig({}, configApply[i]));
             }
         }
     }
@@ -50,7 +44,7 @@ Sjl.core.template.applyConfig = function(configBase, configApply) {
             if(configApply.hasOwnProperty(key) && !configBase.hasOwnProperty(key)) {
                 configBase[key] = configApply[key];
             } else if(configBase.hasOwnProperty(key) && configBase[key].constructor === Object) {
-                configBase[key] = scope.applyConfig(configBase[key], configApply[key]);
+                configBase[key] = Sjl.applyConfig(configBase[key], configApply[key]);
             }
         }
     }
@@ -58,7 +52,7 @@ Sjl.core.template.applyConfig = function(configBase, configApply) {
     return configBase;
 };
 
-Sjl.core.template.generateTemplateConfig = function(componentScope, config) {
+Sjl.generateTemplateConfig = function(componentScope, config) {
     var scope = Sjl.core.template;
     var templateConfig = scope._getTemplateConfig(componentScope, config);
     var templateString = JSON.stringify(templateConfig);
@@ -75,7 +69,7 @@ Sjl.core.template.generateTemplateConfig = function(componentScope, config) {
     }
 
     templateConfig = JSON.parse(templateString);
-    scope.applyConfig(templateConfig, config);
+    Sjl.applyConfig(templateConfig, config);
     return templateConfig;
 };
 

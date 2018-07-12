@@ -5,7 +5,7 @@ Scl.core.remote.init = function() {
 Scl.core.remote._options = { method: "GET", resource: "users", callback: null, authentication: {name: "", password: ""} };
 
 /**
-* @options:
+* @param options
  *  method: Request method
  *  resource: Url path of the resource
  *  callback: callback function which is called after response

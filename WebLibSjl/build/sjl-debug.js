@@ -6,7 +6,6 @@
  * @Version 1.0
  *
  */
-
 var Sjl = {
     config: {},
     style: {
@@ -16,8 +15,9 @@ var Sjl = {
     core: {
         template: {},
         cookie: {},
-        element: {},
         remote: {},
+        event: {},
+        element: {},
         container: {}
     },
     component: {
@@ -35,10 +35,128 @@ var Sjl = {
     custom: {}
 };
 
-Sjl.createApplication = function() {
+Sjl._scriptsToLoad = 0;
+Sjl._scriptPackages = ["core", "model", "custom"];
+
+Sjl.init = function() {
+    Sjl._scriptsToLoad = 0;
+    var packageName;
+
+    // load scripts
+    for( var i = 0; i < Sjl._scriptPackages.length; i++ ) {
+        packageName = Sjl._scriptPackages[i];
+
+        if(this.hasOwnProperty(packageName)) {
+            this._loadPackage(packageName);
+        }
+    }
+    
+    // load components
+    for( packageName in this.component ) {
+        if(this.component.hasOwnProperty(packageName)) {
+            this._loadComponent(packageName);
+        }
+    }
+
+    // load styles
+    for( var styleName in this.style ) {
+        if(this.style.hasOwnProperty(styleName)) {
+            this._loadStyle(styleName);
+        }
+    }
+
+    Sjl._initialized();
+};
+
+Sjl._loadPackage = function(packageName, scope, path) {
+    scope = scope || this;
+
+    if(!scope.hasOwnProperty(packageName)) {
+        console.warn("package not found: "+packageName);
+        return;
+    }
+
+    for( var scriptName in scope[packageName] ) {
+        if(scope[packageName].hasOwnProperty(scriptName)) {
+            this._loadScript(packageName, scriptName, scope, path);
+        }
+    }
+};
+
+Sjl._loadStyle = function(styleName) {
+    if(SjlConfig.loadStyles == false) {
+        return;
+    }
+
+    Sjl._createLink(SjlConfig.stylePath + styleName + ".css");
+};
+
+Sjl._loadScript = function(packageName, scriptName, scope, path) {
+    if(SjlConfig.loadScripts == false) {
+        return;
+    }
+
+    if(!scope[packageName].hasOwnProperty(scriptName)) {
+        console.warn("script not found: "+scriptName);
+        return;
+    }
+
+    path = path || SjlConfig.libPath;
+    Sjl._createScript(path + packageName + "/" + scriptName + ".js");
+};
+
+Sjl._loadComponent = function(scriptName) {
+    if(SjlConfig.loadComponents == false) {
+        return;
+    }
+
+    Sjl._createScript(SjlConfig.libPath + "component/" + scriptName + "/controller.js");
+
+    if(scriptName != "base") {
+        Sjl._createScript(SjlConfig.libPath + "component/" + scriptName + "/template.js");
+        Sjl._createScript(SjlConfig.libPath + "component/" + scriptName + "/events.js");
+    }
+};
+
+Sjl._createLink = function(stylePath) {
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.type = "text/css";
+    link.href = stylePath;
+    document.head.appendChild(link);
+};
+
+Sjl._createScript = function(scriptPath) {
+    Sjl._scriptsToLoad++;
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = scriptPath;
+    script.onload = Sjl._scriptLoaded;
+    document.head.appendChild(script);
+};
+
+Sjl._scriptLoaded = function(event) {
+    Sjl._scriptsToLoad--;
+    Sjl._initialized();
+};
+
+Sjl._initialized = function() {
+    if(Sjl._scriptsToLoad == 0) {
+        Sjl.initialize();
+    }
+};
+
+Sjl.initialize = function() {
+    var sessionToken = Sjl.getCookie("sessionToken");
+
+    if(Sjl.applySession.constructor == Function && sessionToken && sessionToken.length > 0) {
+        Sjl.applySession(sessionToken);
+    }
+
     if(!Sjl.custom.view) {
         //TODO: not functional at all
         //console.info("no custom view is defined, you can only use components. if you want to create an application define a view at scope Sjl.custom.view");
+        return;
     }
 
     for(var key in Sjl.custom.view) {
@@ -170,20 +288,10 @@ Sjl.core.container.init();
 
 //./src/main/js/core/cookie.js
 Sjl.core.cookie.init = function() {
-    Sjl.core.element._scopeName = "core.cookie";
-
-    // map public functions
-    Sjl.setCookie = Sjl.core.cookie.setCookie;
-    Sjl.getCookie = Sjl.core.cookie.getCookie;
-    Sjl.eraseCookie = Sjl.core.cookie.eraseCookie;
-    var sessionToken = Sjl.getCookie("sessionToken");
-
-    if(Sjl.applySession.constructor == Function && sessionToken && sessionToken.length > 0) {
-        Sjl.applySession(sessionToken);
-    }
+    Sjl.core.cookie._scopeName = "core.cookie";
 };
 
-Sjl.core.cookie.setCookie = function(name, value, expireHours, path) {
+Sjl.setCookie = function(name, value, expireHours, path) {
     var cookieValue = name + "=" + value;
 
     if(expireHours) {
@@ -200,7 +308,7 @@ Sjl.core.cookie.setCookie = function(name, value, expireHours, path) {
     document.cookie = cookieValue;
 };
 
-Sjl.core.cookie.getCookie = function(name) {
+Sjl.getCookie = function(name) {
     var ca = document.cookie.split(';');
     name = name + "=";
 
@@ -219,7 +327,7 @@ Sjl.core.cookie.getCookie = function(name) {
     return "";
 };
 
-Sjl.core.cookie.eraseCookie = function(name) {
+Sjl.eraseCookie = function(name) {
     document.cookie = name+'=; Max-Age=-99999999;';
 };
 
@@ -495,16 +603,50 @@ Sjl.core.element.hideElement = function(id) {
 
 Sjl.core.element.init();
 
-//./src/main/js/core/remote.js
-Sjl.core.remote.init = function() {
-    Sjl.core.element._scopeName = "core.remote";
+//./src/main/js/core/event.js
+Sjl._eventListeners = {};
 
-    // map public functions
-    Sjl.request = Sjl.core.remote.request;
+Sjl.core.event.init = function() {
+    Sjl.core.event._scopeName = "core.event";
 };
 
-Sjl.core.remote.request = function(options) {
-    if(!options || !options.resourcePath) {
+Sjl.listen = function(name, callback, scope) {
+    scope = scope || Sjl;
+
+    if(scope._eventListeners.hasOwnProperty(name)) {
+        console.error("listeners are already defined: "+name);
+        return;
+    }
+
+    scope._eventListeners[name] = callback;
+};
+
+Sjl.fire = function(name, context, scope) {
+    scope = scope || Sjl;
+
+    if(!scope._eventListeners.hasOwnProperty(name)) {
+        return
+    }
+
+    scope._eventListeners[name](context, scope);
+};
+
+Sjl.core.event.init();
+
+//./src/main/js/core/remote.js
+Sjl.core.remote.init = function() {
+    Sjl.core.remote._scopeName = "core.remote";
+};
+
+/**
+ * @param options
+ *  method: Request method
+ *  resource: Url path of the resource
+ *  callback: callback function which is called after response
+ *  authentication: object for basic authentication {name: "", password: ""}
+ */
+Sjl.request = function(options) {
+    if(!options || !options.resource) {
         console.warn("no options defined for request.");
         return;
     }
@@ -513,7 +655,7 @@ Sjl.core.remote.request = function(options) {
     var token = Sjl.getCookie("sessionToken");
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() { Sjl.core.remote._requestReadyStateChange(this, options); };
-    request.open(options.method, Sjl.config.remotePath + options.resourcePath, true);
+    request.open(options.method, SjlConfig.remotePath + options.resource, true);
     request.setRequestHeader("Content-type", "application/json");
 
     if(!token && options.authentication) {
@@ -1073,7 +1215,7 @@ Sjl.component.window._eventFunctions.clickLogin = function(element, event) {
     }
 
     var options = {
-        method: "GET", resourcePath: "users/login",
+        method: "GET", resource: "users/login",
         callback: Sjl.component.window._eventFunctions.loginCallback,
         authentication: {name: name.value, password: password.value},
         mainComponentId: element.mainComponentId
@@ -1094,10 +1236,11 @@ Sjl.component.window._eventFunctions.loginCallback = function(response, options)
 
     Sjl.setCookie("sessionToken", options.sessionToken, 4);
     Sjl.removeWindow(options.mainComponentId);
+    Sjl.fire("afterLogin", response, options);
 
-    if(Sjl.afterLogin.constructor == Function) {
+    /*if(Sjl.afterLogin.constructor == Function) {
         Sjl.afterLogin(response, options);
-    }
+    }*/
 };
 
 //./src/main/js/component/window/template.js

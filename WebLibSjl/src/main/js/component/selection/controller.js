@@ -1,6 +1,3 @@
-Sjl.component.selection._eventFunctions = {};
-Sjl.component.selection._templates = {};
-
 Sjl.component.selection.init = function() {
     Sjl.core.element._scopeName = "component.selection";
     Sjl.applyConfig(Sjl.component.selection, Sjl.component.input);

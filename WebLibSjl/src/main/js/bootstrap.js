@@ -29,7 +29,6 @@
         configFile = "config/config-develop.js";
     }
 
-    document.write('<script type="text/javascript" charset="UTF-8" src="' + path + libFile + '"></script>');
     document.write('<script type="text/javascript" charset="UTF-8" src="' + path + configFile + '"></script>');
-    document.write('<script type="text/javascript" charset="UTF-8" src="' + path + 'loader.js"></script>');
+    document.write('<script type="text/javascript" charset="UTF-8" src="' + path + libFile + '"></script>');
 })();

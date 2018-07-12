@@ -1,6 +1,3 @@
-Sjl.component.input._eventFunctions = {};
-Sjl.component.input._templates = {};
-
 Sjl.component.input.init = function() {
     Sjl.core.element._scopeName = "component.input";
     Sjl.applyConfig(Sjl.component.input, Sjl.component.base);
