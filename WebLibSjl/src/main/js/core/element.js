@@ -120,7 +120,7 @@ Sjl.core.element._addDomEvents = function(events, callbacks, element, scope, com
                 var fnName = events[key];
 
                 if(!componentScope._eventFunctions.hasOwnProperty(fnName)) {
-                    console.warn('no function defined for component scope: '+componentScope.toString()+' fn: '+fnName);
+                    console.warn('no function defined for component scope: '+componentScope._scopeName+' fn: '+fnName);
                     continue;
                 }
 
@@ -217,12 +217,21 @@ Sjl.createElement = function(config, isComponent) {
     scope._addElement(element);
 
     if(config.parent) {
-        var parentElement = scope._hasElementId(config.parent) ? Sjl.getElement(config.parent) : null;
-        var parentElementDom = parentElement ? parentElement.dom : null;
-        var parentDom = config.parent === 'body' ? top.document.body : parentElementDom;
+        if(config.parent === 'body') {
+            top.document.body.appendChild(element.dom);
+        } else {
+            var parentElement = scope._hasElementId(config.parent) ? Sjl.getElement(config.parent) : null;
+            var parentElementDom = parentElement ? parentElement.dom : null;
 
-        if(parentDom) {
-            parentDom.appendChild(element.dom);
+            if(!parentElementDom) {
+                parentElementDom = Sjl.getDomElement(config.parent);
+            }
+
+            if(parentElementDom) {
+                parentElementDom.appendChild(element.dom);
+            } else {
+                console.warn("could not append child, because parent was not found -> element: "+config.id+" | parent: "+config.parent);
+            }
         }
     }
 
@@ -236,6 +245,14 @@ Sjl.createElement = function(config, isComponent) {
         element.findElementByName = Sjl.findElementByName;
         scope._setChildren(config, element);
     }
+
+    element.hide = function() {
+        Sjl.hideElement(element.id);
+    };
+
+    element.show = function() {
+        Sjl.showElement(element.id);
+    };
 
     return element;
 };

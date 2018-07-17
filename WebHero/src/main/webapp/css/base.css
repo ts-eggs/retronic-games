@@ -59,6 +59,19 @@ body {
     height: calc(100% - 91px);
 }
 
+.content-button {
+    margin: 20px 0 20px 20px;
+    padding: 10px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 50px;
+    font-size: 16px;
+    color: #cccc99;
+    background-color: #333300;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .tree {
     float: left;
     width: 40%;

@@ -20,7 +20,7 @@ Sjl.applyCustom = function(configBase, configApply) {
     return Sjl.applyConfig(configBase, configApply);
 };
 
-Sjl.applyConfig = function(configBase, configApply) {
+Sjl.applyConfig = function(configBase, configApply, forceOverride) {
     if(!configBase || !configApply) {
         console.error("cannot apply config, because some config is not defined, base: "+configBase+" - apply: "+configApply);
         return;
@@ -34,17 +34,17 @@ Sjl.applyConfig = function(configBase, configApply) {
     if(configApply.constructor === Array) {
         for( var i = 0; i < configApply.length; i++ ) {
             if(configBase.indexOf(configApply[i]) == -1) {
-                configBase.push(Sjl.applyConfig({}, configApply[i]));
+                configBase.push(Sjl.applyConfig({}, configApply[i], forceOverride));
             }
         }
     }
 
     if(configApply.constructor === Object) {
         for( var key in configApply ) {
-            if(configApply.hasOwnProperty(key) && !configBase.hasOwnProperty(key)) {
+            if(configApply.hasOwnProperty(key) && (forceOverride || !configBase.hasOwnProperty(key))) {
                 configBase[key] = configApply[key];
             } else if(configBase.hasOwnProperty(key) && configBase[key].constructor === Object) {
-                configBase[key] = Sjl.applyConfig(configBase[key], configApply[key]);
+                configBase[key] = Sjl.applyConfig(configBase[key], configApply[key], forceOverride);
             }
         }
     }
@@ -69,7 +69,7 @@ Sjl.generateTemplateConfig = function(componentScope, config) {
     }
 
     templateConfig = JSON.parse(templateString);
-    Sjl.applyConfig(templateConfig, config);
+    Sjl.applyConfig(templateConfig, config, config.componentId > 0);
     return templateConfig;
 };
 

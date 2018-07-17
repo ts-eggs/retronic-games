@@ -12,11 +12,12 @@ var Sjl = {
         component : {}
     },
     core: {
-        template: {},
         cookie: {},
-        remote: {},
+        dom: {},
         event: {},
         element: {},
+        remote: {},
+        template: {}
     },
     component: {
         base: {},
@@ -33,6 +34,7 @@ var Sjl = {
     custom: {}
 };
 
+Sjl._scopeName = "sjl";
 Sjl._scriptsToLoad = 0;
 Sjl._scriptPackages = ["core", "model"];
 

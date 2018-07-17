@@ -5,15 +5,15 @@ Sjl.component.button.init = function() {
 
 Sjl.component.button._optimizeConfig = function (config)  {
     Sjl.component.base._optimizeConfig(config);
-    config.type = "input";
+    config.type = "button";
     config.height = config.height || 30;
+    config.width = config.width || 120;
     config.callbacks = config.callbacks || {};
 };
 
-Sjl.component.button.create = function(config, scope) {
+Sjl.createButton = Sjl.component.button.create = function(config, scope) {
     scope = scope || Sjl.component.button;
-    var element = Sjl.component.base.create(config, scope);
-    return element;
+    return Sjl.component.base.create(config, scope);
 };
 
 Sjl.component.button.init();
